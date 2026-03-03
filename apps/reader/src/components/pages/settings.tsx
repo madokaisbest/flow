@@ -142,7 +142,8 @@ const Synchronization: React.FC = () => {
   const testConnection = async () => {
     try {
       const auth = btoa(unescape(encodeURIComponent(`${config.username}:${config.password}`)))
-      const res = await fetch(config.url + (config.url.endsWith('/') ? '' : '/') + 'books', {
+      const baseUrl = config.url.replace(/\/$/, '')
+      const res = await fetch(`${baseUrl}/books`, {
         method: 'PROPFIND',
         headers: {
           Authorization: `Basic ${auth}`,
