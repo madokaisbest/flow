@@ -16,18 +16,35 @@ import { Page } from '../Page'
 
 export const Settings: React.FC = () => {
   const { scheme, setScheme } = useColorScheme()
-  const { asPath, push, locale } = useRouter()
+  const [currentLocale, setCurrentLocale] = useState('en-US')
   const [settings, setSettings] = useSettings()
   const t = useTranslation('settings')
+
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem('NEXT_LOCALE')
+      if (stored) {
+        setCurrentLocale(stored)
+      } else {
+        const nav = navigator.language
+        if (nav.startsWith('zh')) {
+          setCurrentLocale('zh-CN')
+        } else if (nav.startsWith('ja')) {
+          setCurrentLocale('ja-JP')
+        }
+      }
+    } catch { }
+  }, [])
 
   return (
     <Page headline={t('title')}>
       <div className="space-y-6">
         <Item title={t('language')}>
           <Select
-            value={locale}
+            value={currentLocale}
             onChange={(e) => {
-              push(asPath, undefined, { locale: e.target.value })
+              window.localStorage.setItem('NEXT_LOCALE', e.target.value)
+              window.location.reload()
             }}
           >
             <option value="en-US">English</option>
