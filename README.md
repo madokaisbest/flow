@@ -71,9 +71,23 @@ docker build -t flow .
 docker run -p 3000:3000 --env-file apps/reader/.env.local flow
 ```
 
+### Cloudflare Pages
+
+The `apps/reader` frontend has been adapted for static hosting, making it directly deployable to **Cloudflare Pages**.
+
+1. Connect your GitHub/GitLab repository to Cloudflare Pages.
+2. Under **Build settings**, configure the following:
+   - **Framework preset**: `Next.js (Static HTML Export)`
+   - **Build command**: `pnpm run build --filter @flow/reader`
+   - **Build output directory**: `apps/reader/out`
+   - **Root directory**: `/`
+3. Click "Save and Deploy".
+
+> **Note:** The reader app is now a pure static site. For WebDAV syncing, you do not need to configure any environment variables here during build. Instead, you enter your WebDAV credentials (or the URL of your WebDAV Proxy Worker) directly in the reader's settings page in your browser.
+
 ### WebDAV Proxy (Cloudflare Worker)
 
-If you need to connect to an external WebDAV server securely without routing all buffer traffic through your Node.js backend, you can deploy the included Cloudflare Worker.
+If you need to connect to an external WebDAV server securely and bypass CORS restrictions (especially necessary when hosting the frontend on Cloudflare Pages), you can deploy the included Cloudflare Worker as a proxy.
 
 1. Configure your WebDAV settings in `apps/webdav-proxy/wrangler.toml` (or use `.dev.vars` / Cloudflare Dashboard Secrets):
    ```toml
@@ -87,7 +101,7 @@ If you need to connect to an external WebDAV server securely without routing all
    npm install
    npx wrangler deploy
    ```
-3. Update your frontend environment variables to point to your new worker URL (e.g., `https://webdav-proxy.<your-user>.workers.dev`).
+3. Open the reader app in your browser, go to **Settings > WebDAV Sync**, and enter your deployed worker's URL (e.g., `https://webdav-proxy.<your-user>.workers.dev`), along with any required credentials for the proxy.
 
 ## Contributing
 
