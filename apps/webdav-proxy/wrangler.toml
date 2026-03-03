@@ -6,5 +6,6 @@ compatibility_date = "2024-03-04"
 workers_dev = true
 
 [vars]
-WEBDAV_URL = "https://ena.teracloud.jp/dav/"
-WEBDAV_DIR = "/books"
+# 在此处填写你的 WebDAV 默认后端地址，或在 Cloudflare Dashboard / Github Actions Secrets 中配置
+# WEBDAV_URL = "https://your-backend-webdav.com/"
+# WEBDAV_DIR = "/books"

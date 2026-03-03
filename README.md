@@ -71,6 +71,24 @@ docker build -t flow .
 docker run -p 3000:3000 --env-file apps/reader/.env.local flow
 ```
 
+### WebDAV Proxy (Cloudflare Worker)
+
+If you need to connect to an external WebDAV server securely without routing all buffer traffic through your Node.js backend, you can deploy the included Cloudflare Worker.
+
+1. Configure your WebDAV settings in `apps/webdav-proxy/wrangler.toml` (or use `.dev.vars` / Cloudflare Dashboard Secrets):
+   ```toml
+   [vars]
+   WEBDAV_URL = "https://your-backend-webdav.com/"
+   WEBDAV_DIR = "/books"
+   ```
+2. Deploy the worker:
+   ```sh
+   cd apps/webdav-proxy
+   npm install
+   npx wrangler deploy
+   ```
+3. Update your frontend environment variables to point to your new worker URL (e.g., `https://webdav-proxy.<your-user>.workers.dev`).
+
 ## Contributing
 
 There are many ways in which you can participate in this project, for example:

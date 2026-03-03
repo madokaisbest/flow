@@ -39,12 +39,12 @@ const config = {
   webpack(config) {
     return config
   },
-  i18n: {
-    locales: ['en-US', 'zh-CN', 'ja-JP'],
-    defaultLocale: 'en-US',
-  },
+
   eslint: {
     ignoreDuringBuilds: true,
+  },
+  images: {
+    unoptimized: true,
   },
   ...(IS_DOCKER && {
     output: 'standalone',
