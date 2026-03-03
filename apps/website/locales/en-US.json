@@ -8,7 +8,6 @@
       "title": "Frequently asked questions"
     }
   },
-
   "open_app": "Open App",
   "terms": "Terms",
   "privacy": "Privacy",
@@ -18,7 +17,6 @@
   "roadmap": "Roadmap",
   "donate": "Donate",
   "donate_url": "https://ko-fi.com/pacexy",
-
   "redefine": "Redefine",
   "reader": "reader",
   "description": "Free. Open source. Browser-based.",
@@ -53,7 +51,6 @@
       "desc": "Store your books, notes, reading progress and even other data in the cloud you specified."
     }
   },
-
   "frequently_asked_questions": "Frequently asked questions",
   "qa2": {
     "0": {
@@ -74,7 +71,7 @@
     },
     "4": {
       "q": "What cloud storage do you support?",
-      "a": "Only Dropbox for now."
+      "a": "WebDAV is fully supported."
     }
   }
 }

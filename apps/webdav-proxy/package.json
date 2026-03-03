@@ -1,0 +1,13 @@
+{
+    "name": "webdav-proxy",
+    "version": "1.0.0",
+    "description": "Cloudflare worker for WebDAV proxy",
+    "main": "src/worker.ts",
+    "scripts": {
+        "deploy": "wrangler deploy"
+    },
+    "devDependencies": {
+        "@cloudflare/workers-types": "^4.20240304.0",
+        "typescript": "^5.3.3"
+    }
+}

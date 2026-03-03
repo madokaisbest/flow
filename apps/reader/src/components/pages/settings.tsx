@@ -122,6 +122,26 @@ const Synchronization: React.FC = () => {
 
   const isConfigured = !!config.url && !!config.username && !!config.password
 
+  const testConnection = async () => {
+    try {
+      const auth = btoa(unescape(encodeURIComponent(`${config.username}:${config.password}`)))
+      const res = await fetch(config.url + (config.url.endsWith('/') ? '' : '/') + 'books', {
+        method: 'PROPFIND',
+        headers: {
+          Authorization: `Basic ${auth}`,
+          Depth: '0'
+        }
+      })
+      if (res.ok || res.status === 404 || res.status === 207) {
+        alert('Connection Successful!')
+      } else {
+        alert('Connection Failed: ' + res.status)
+      }
+    } catch (e: any) {
+      alert('Connection Error: ' + e.message)
+    }
+  }
+
   return (
     <Item title="WebDAV Sync">
       <Select disabled>
@@ -153,6 +173,9 @@ const Synchronization: React.FC = () => {
             }}
           >
             Save
+          </Button>
+          <Button variant="secondary" onClick={testConnection}>
+            Test Connection
           </Button>
           {isConfigured && (
             <Button

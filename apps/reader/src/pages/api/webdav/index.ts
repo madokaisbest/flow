@@ -13,9 +13,9 @@ export const config = {
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     let { url, username, password, method, path, body, format } = req.body
 
-    url = url || process.env.WEBDAV_URL
-    username = username || process.env.WEBDAV_USERNAME
-    password = password || process.env.WEBDAV_PASSWORD
+    url = url
+    username = username
+    password = password
     const baseDir = process.env.WEBDAV_DIR || '/books'
 
     if (!url || !method) {

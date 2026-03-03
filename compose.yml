@@ -1,0 +1,27 @@
+services:
+  reader:
+    container_name: reader
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: always
+    network_mode: host
+    environment:
+      - PORT=${PORT:-3003}
+      # WebDAV 预设配置 (如果不填，网页端依然可以手动配置)
+      - WEBDAV_URL=${WEBDAV_URL}
+      - WEBDAV_USERNAME=${WEBDAV_USERNAME}
+      - WEBDAV_PASSWORD=${WEBDAV_PASSWORD}
+      # 可选：修改远端存储的默认根目录 (默认为 /books)
+      - WEBDAV_DIR=${WEBDAV_DIR:-/books}
+    env_file:
+      - .env
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.reader.rule=Host(`reader.${DOMAIN}`)
+      - traefik.http.routers.reader.entrypoints=websecure
+      - traefik.http.routers.reader.tls.certresolver=myresolver
+      - traefik.http.routers.reader.tls.domains[0].main=${DOMAIN}
+      - traefik.http.routers.reader.tls.domains[0].sans=*.${DOMAIN}
+      - traefik.http.routers.reader.middlewares=gzip@file,security-headers@file
+      - traefik.http.services.reader.loadbalancer.server.port=${PORT:-3003}

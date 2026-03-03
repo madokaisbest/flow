@@ -8,7 +8,6 @@
       "title": "常见问题"
     }
   },
-
   "open_app": "打开 App",
   "terms": "使用条款",
   "privacy": "隐私政策",
@@ -18,7 +17,6 @@
   "roadmap": "开发计划",
   "donate": "捐赠",
   "donate_url": "https://afdian.com/a/pacexy",
-
   "redefine": "重新定义",
   "reader": "阅读器",
   "description": "免费。开源。基于浏览器。",
@@ -53,7 +51,6 @@
       "desc": "存储您的书籍、笔记、阅读进度甚至其他数据在您指定的云端。"
     }
   },
-
   "frequently_asked_questions": "常见问题",
   "qa2": {
     "0": {
@@ -74,7 +71,7 @@
     },
     "4": {
       "q": "支持什么云端存储？",
-      "a": "目前仅支持 Dropbox。"
+      "a": "目前支持 WebDAV 协议的网盘。"
     }
   }
 }

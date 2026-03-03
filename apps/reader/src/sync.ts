@@ -1,31 +1,27 @@
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
+import { createClient } from 'webdav'
 
 import { BookRecord, db } from './db'
 
 export const WEB_DAV_CONFIG_KEY = 'webdav-config'
 
-async function callProxy(method: string, params: any = {}) {
-  const configStr = window.localStorage.getItem(WEB_DAV_CONFIG_KEY) || '{}'
+function getWebDAVClient() {
+  const configStr = typeof window !== 'undefined' ? window.localStorage.getItem(WEB_DAV_CONFIG_KEY) || '{}' : '{}'
   const config = JSON.parse(configStr)
+  if (!config.url || !config.username || !config.password) {
+    throw new Error('WebDAV not configured')
+  }
 
-  const response = await fetch('/api/webdav', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ...config, method, ...params }),
+  const auth = typeof window !== 'undefined'
+    ? btoa(unescape(encodeURIComponent(`${config.username}:${config.password}`)))
+    : Buffer.from(`${config.username}:${config.password}`).toString('base64')
+
+  return createClient(config.url, {
+    headers: {
+      Authorization: `Basic ${auth}`
+    }
   })
-
-  if (!response.ok) {
-    const error = await response.json()
-    throw new Error(error.error || 'Proxy request failed')
-  }
-
-  // Handle binary format
-  if (params.format === 'binary') {
-    return response.arrayBuffer()
-  }
-
-  return response.json()
 }
 
 interface SerializedBooks {
@@ -52,17 +48,14 @@ function deserializeData(text: string) {
 
 export async function uploadData(books: BookRecord[]) {
   const content = serializeData(books)
-  // Robust base64 for unicode strings
-  const base64 = typeof window !== 'undefined'
-    ? btoa(unescape(encodeURIComponent(content)))
-    : Buffer.from(content).toString('base64')
-  return callProxy('putFileContents', { path: `/${DATA_FILENAME}`, body: base64 })
+  const client = getWebDAVClient()
+  return client.putFileContents(`/${DATA_FILENAME}`, content, { overwrite: true })
 }
 
-export const dropboxFilesFetcher = async (path: string) => {
+export const webdavFilesFetcher = async (path: string) => {
   try {
-    const contents = await callProxy('getDirectoryContents', { path })
-    if (contents && contents._404) return []
+    const client = getWebDAVClient()
+    const contents = await client.getDirectoryContents(path)
     return (contents as any[]).map((item) => ({
       ...item,
       name: item.basename,
@@ -73,10 +66,10 @@ export const dropboxFilesFetcher = async (path: string) => {
   }
 }
 
-export const dropboxBooksFetcher = async (path: string) => {
+export const webdavBooksFetcher = async (path: string) => {
   try {
-    const text = await callProxy('getFileContents', { path, format: 'text' })
-    if (text && (text._404 || text.error)) return []
+    const client = getWebDAVClient()
+    const text = await client.getFileContents(path, { format: 'text' })
     return deserializeData(text as string)
   } catch (e: any) {
     return []
@@ -85,7 +78,28 @@ export const dropboxBooksFetcher = async (path: string) => {
 
 // Helper for raw proxy access in index.tsx
 export async function proxyRequest(method: string, params: any) {
-  return callProxy(method, params)
+  const client = getWebDAVClient() as any
+
+  if (method === 'getFileContents') {
+    return client.getFileContents(params.path, { format: params.format })
+  } else if (method === 'createDirectory') {
+    return client.createDirectory(params.path)
+  } else if (method === 'putFileContents') {
+    let data: any = params.body
+    if (typeof data === 'string' && params.path.endsWith('.epub')) {
+      const binaryString = atob(data)
+      const len = binaryString.length
+      const bytes = new Uint8Array(len)
+      for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i)
+      }
+      data = bytes.buffer
+    }
+    return client.putFileContents(params.path, data, { overwrite: true })
+  } else if (method === 'deleteFile') {
+    return client.deleteFile(params.path)
+  }
+  throw new Error(`Unsupported method: ${method}`)
 }
 
 export async function pack() {

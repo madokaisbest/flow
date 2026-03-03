@@ -2,16 +2,16 @@ import useSWR from 'swr/immutable'
 
 import {
   DATA_FILENAME,
-  dropboxBooksFetcher,
-  dropboxFilesFetcher,
+  webdavBooksFetcher,
+  webdavFilesFetcher,
 } from '@flow/reader/sync'
 
 export function useRemoteFiles() {
-  return useSWR('/books', dropboxFilesFetcher, { shouldRetryOnError: false })
+  return useSWR('/books', webdavFilesFetcher, { shouldRetryOnError: false })
 }
 
 export function useRemoteBooks() {
-  return useSWR(`/${DATA_FILENAME}`, dropboxBooksFetcher, {
+  return useSWR(`/${DATA_FILENAME}`, webdavBooksFetcher, {
     shouldRetryOnError: false,
   })
 }
