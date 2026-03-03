@@ -52,24 +52,7 @@ Copy and rename all `.env.local.example`s to `.env.local` and setup the environm
 pnpm dev
 ```
 
-## Self-hosting
-
-Before self-hosting, you should [setup the environment variables](#setup-the-environment-variables).
-
-### Docker
-
-You can use docker-compose:
-
-```sh
-docker compose up -d
-```
-
-Or build the image and run it manually:
-
-```sh
-docker build -t flow .
-docker run -p 3000:3000 --env-file apps/reader/.env.local flow
-```
+## Deployment
 
 ### Cloudflare Pages
 
