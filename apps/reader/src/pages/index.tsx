@@ -27,7 +27,7 @@ import {
 } from '../hooks'
 import { reader, useReaderSnapshot } from '../models'
 import { lock } from '../styles'
-import { dbx, pack, uploadData } from '../sync'
+import { proxyRequest, pack, uploadData } from '../sync'
 import { copy } from '../utils'
 
 const placeholder = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><rect fill="gray" fill-opacity="0" width="1" height="1"/></svg>`
@@ -149,12 +149,15 @@ const Library: React.FC = () => {
         if (file) continue
 
         setLoading(book.id)
-        await dbx
-          .filesDownload({ path: `/files/${remoteFile.name}` })
-          .then((d) => {
-            const blob: Blob = (d.result as any).fileBlob
-            return addFile(book.id, new File([blob], book.name))
+        try {
+          const contents = await proxyRequest('getFileContents', {
+            path: `/books/${remoteFile.name}`,
+            format: 'binary',
           })
+          await addFile(book.id, new File([contents as ArrayBuffer], book.name))
+        } catch (e) {
+          console.error(e)
+        }
         setLoading(undefined)
       }
     })
@@ -261,11 +264,35 @@ const Library: React.FC = () => {
                       if (!file) continue
 
                       setLoading(book.id)
-                      await dbx.filesUpload({
-                        path: `/files/${book.name}`,
-                        contents: file.file,
-                      })
-                      setLoading(undefined)
+                      try {
+                        try {
+                          await proxyRequest('createDirectory', { path: '/books' })
+                        } catch { }
+
+                        const reader = new FileReader()
+                        const base64Promise = new Promise<string>((resolve) => {
+                          reader.onload = () => {
+                            const result = reader.result as string
+                            if (result && result.includes(',')) {
+                              // @ts-ignore
+                              resolve(result.split(',')[1])
+                            } else {
+                              resolve(result || '')
+                            }
+                          }
+                        })
+                        reader.readAsDataURL(file.file)
+                        const body = await base64Promise
+
+                        await proxyRequest('putFileContents', {
+                          path: `/books/${book.name}`,
+                          body,
+                        })
+                      } catch (err) {
+                        console.error('Upload failed:', err)
+                      } finally {
+                        setLoading(undefined)
+                      }
 
                       mutateRemoteFiles()
                     }
@@ -285,11 +312,11 @@ const Library: React.FC = () => {
                     // folder data is not updated after `filesDeleteBatch`
                     mutateRemoteFiles(
                       async (data) => {
-                        await dbx.filesDeleteBatch({
-                          entries: selectedBooks.map((b) => ({
-                            path: `/files/${b.name}`,
-                          })),
-                        })
+                        for (const b of selectedBooks) {
+                          try {
+                            await proxyRequest('deleteFile', { path: `/books/${b.name}` })
+                          } catch { }
+                        }
                         return data?.filter(
                           (f) => !selectedBooks.find((b) => b.name === f.name),
                         )
@@ -426,7 +453,7 @@ const Book: React.FC<BookProps> = ({
       </div>
 
       <div
-        className="line-clamp-2 text-on-surface-variant typescale-body-small lg:typescale-body-medium mt-2 w-full"
+        className="line-clamp-3 text-on-surface-variant typescale-body-small lg:typescale-body-medium mt-2 w-full"
         title={book.name}
       >
         <MdCheckCircle

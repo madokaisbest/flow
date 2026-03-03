@@ -1,19 +1,17 @@
-import { useEventListener } from '@literal-ui/hooks'
 import Dexie from 'dexie'
 import { useRouter } from 'next/router'
-import { parseCookies, destroyCookie } from 'nookies'
+import { useState, useEffect } from 'react'
 
 import {
   ColorScheme,
   useColorScheme,
-  useForceRender,
   useTranslation,
 } from '@flow/reader/hooks'
 import { useSettings } from '@flow/reader/state'
-import { dbx, mapToToken, OAUTH_SUCCESS_MESSAGE } from '@flow/reader/sync'
+import { WEB_DAV_CONFIG_KEY } from '@flow/reader/sync'
 
 import { Button } from '../Button'
-import { Checkbox, Select } from '../Form'
+import { Checkbox, Select, TextField } from '../Form'
 import { Page } from '../Page'
 
 export const Settings: React.FC = () => {
@@ -61,6 +59,35 @@ export const Settings: React.FC = () => {
             }}
           />
         </Item>
+        <Item title={t('library_sort')}>
+          <div className="flex gap-2">
+            <Select
+              value={settings.librarySortField || 'createdAt'}
+              onChange={(e) => {
+                setSettings({
+                  ...settings,
+                  librarySortField: e.target.value as any,
+                })
+              }}
+            >
+              <option value="name">{t('library_sort.name')}</option>
+              <option value="createdAt">{t('library_sort.createdAt')}</option>
+              <option value="size">{t('library_sort.size')}</option>
+            </Select>
+            <Select
+              value={settings.librarySortOrder || 'desc'}
+              onChange={(e) => {
+                setSettings({
+                  ...settings,
+                  librarySortOrder: e.target.value as any,
+                })
+              }}
+            >
+              <option value="asc">{t('library_sort_order.asc')}</option>
+              <option value="desc">{t('library_sort_order.desc')}</option>
+            </Select>
+          </div>
+        </Item>
         <Synchronization />
         <Item title={t('cache')}>
           <Button
@@ -81,55 +108,65 @@ export const Settings: React.FC = () => {
 }
 
 const Synchronization: React.FC = () => {
-  const cookies = parseCookies()
-  const refreshToken = cookies[mapToToken['dropbox']]
-  const render = useForceRender()
+  const [config, setConfig] = useState({ url: '', username: '', password: '' })
   const t = useTranslation('settings.synchronization')
 
-  useEventListener('message', (e) => {
-    if (e.data === OAUTH_SUCCESS_MESSAGE) {
-      // init app (generate access token, fetch remote data, etc.)
-      window.location.reload()
-    }
-  })
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem(WEB_DAV_CONFIG_KEY)
+      if (stored) {
+        setConfig(JSON.parse(stored))
+      }
+    } catch { }
+  }, [])
+
+  const isConfigured = !!config.url && !!config.username && !!config.password
 
   return (
-    <Item title={t('title')}>
-      <Select>
-        <option value="dropbox">Dropbox</option>
+    <Item title="WebDAV Sync">
+      <Select disabled>
+        <option value="webdav">WebDAV</option>
       </Select>
-      <div className="mt-2">
-        {refreshToken ? (
+      <div className="mt-4 flex flex-col gap-3">
+        <TextField
+          name="WebDAV URL"
+          value={config.url}
+          onChange={(e: any) => setConfig({ ...config, url: e.target.value })}
+          placeholder="https://server.com/remote.php/webdav/"
+        />
+        <TextField
+          name="Username"
+          value={config.username}
+          onChange={(e: any) => setConfig({ ...config, username: e.target.value })}
+        />
+        <TextField
+          name="Password"
+          type="password"
+          value={config.password}
+          onChange={(e: any) => setConfig({ ...config, password: e.target.value })}
+        />
+        <div className="mt-2 flex gap-3">
           <Button
-            variant="secondary"
             onClick={() => {
-              destroyCookie(null, mapToToken['dropbox'])
-              render()
+              window.localStorage.setItem(WEB_DAV_CONFIG_KEY, JSON.stringify(config))
+              window.location.reload()
             }}
           >
-            {t('unauthorize')}
+            Save
           </Button>
-        ) : (
-          <Button
-            onClick={() => {
-              const redirectUri =
-                window.location.origin + '/api/callback/dropbox'
-
-              dbx.auth
-                .getAuthenticationUrl(
-                  redirectUri,
-                  JSON.stringify({ redirectUri }),
-                  'code',
-                  'offline',
-                )
-                .then((url) => {
-                  window.open(url as string, '_blank')
-                })
-            }}
-          >
-            {t('authorize')}
-          </Button>
-        )}
+          {isConfigured && (
+            <Button
+              variant="secondary"
+              onClick={() => {
+                window.localStorage.removeItem(WEB_DAV_CONFIG_KEY)
+                setConfig({ url: '', username: '', password: '' })
+                window.location.reload()
+              }}
+            >
+              Logout / Clear
+            </Button>
+          )}
+        </div>
       </div>
     </Item>
   )

@@ -130,7 +130,7 @@ function ReaderGroup({ index }: ReaderGroupProps) {
       </Tab.List>
 
       <DropZone
-        className={clsx('flex-1', isTouchScreen || 'h-0')}
+        className={clsx('flex-1 min-h-0', isTouchScreen || 'h-0')}
         split
         onDrop={async (e, position) => {
           // read `e.dataTransfer` first to avoid get empty value after `await`
@@ -489,7 +489,7 @@ const ReaderPaneFooter: React.FC<FooterProps> = ({ tab }) => {
   )
 }
 
-interface LineProps extends ComponentProps<'div'> {}
+interface LineProps extends ComponentProps<'div'> { }
 const Bar: React.FC<LineProps> = ({ className, ...props }) => {
   return (
     <div

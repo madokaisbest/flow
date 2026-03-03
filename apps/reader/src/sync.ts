@@ -1,40 +1,31 @@
-import { Dropbox } from 'dropbox'
 import { saveAs } from 'file-saver'
 import JSZip from 'jszip'
-import { parseCookies } from 'nookies'
 
 import { BookRecord, db } from './db'
-import { readBlob } from './file'
 
-export const mapToToken = {
-  dropbox: 'dropbox-refresh-token',
-}
+export const WEB_DAV_CONFIG_KEY = 'webdav-config'
 
-export const OAUTH_SUCCESS_MESSAGE = 'oauth_success'
+async function callProxy(method: string, params: any = {}) {
+  const configStr = window.localStorage.getItem(WEB_DAV_CONFIG_KEY) || '{}'
+  const config = JSON.parse(configStr)
 
-export const dbx = new Dropbox({
-  clientId: process.env.NEXT_PUBLIC_DROPBOX_CLIENT_ID,
-  refreshToken: '__fake_token__',
-})
-let _req: Promise<void> | undefined
-dbx.auth.refreshAccessToken = () => {
-  const cookies = parseCookies()
-  const refreshToken = cookies[mapToToken['dropbox']]
-  if (!refreshToken) {
-    // `reject` to skip subsequent api requests
-    return Promise.reject()
+  const response = await fetch('/api/webdav', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...config, method, ...params }),
+  })
+
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.error || 'Proxy request failed')
   }
-  _req ??= fetch(`/api/refresh`)
-    .then((res) => res.json())
-    .then((data) => {
-      dbx.auth.setAccessToken(data.accessToken)
-      dbx.auth.setAccessTokenExpiresAt(data.accessTokenExpiresAt)
-    })
-    .finally(() => {
-      // will fail if no refresh token
-      _req = undefined
-    })
-  return _req
+
+  // Handle binary format
+  if (params.format === 'binary') {
+    return response.arrayBuffer()
+  }
+
+  return response.json()
 }
 
 interface SerializedBooks {
@@ -56,37 +47,45 @@ function serializeData(books?: BookRecord[]) {
 
 function deserializeData(text: string) {
   const { version, dbVersion, books } = JSON.parse(text) as SerializedBooks
-
-  if (version < VERSION) {
-    // migrate `data.json`
-  }
-  if (db && dbVersion < db.verno) {
-    // migrate `BookRecord`
-  }
-
   return books
 }
 
 export async function uploadData(books: BookRecord[]) {
-  return dbx.filesUpload({
-    path: `/${DATA_FILENAME}`,
-    mode: { '.tag': 'overwrite' },
-    contents: serializeData(books),
-  })
+  const content = serializeData(books)
+  // Robust base64 for unicode strings
+  const base64 = typeof window !== 'undefined'
+    ? btoa(unescape(encodeURIComponent(content)))
+    : Buffer.from(content).toString('base64')
+  return callProxy('putFileContents', { path: `/${DATA_FILENAME}`, body: base64 })
 }
 
-export const dropboxFilesFetcher = (path: string) => {
-  return dbx.filesListFolder({ path }).then((d) => d.result.entries)
+export const dropboxFilesFetcher = async (path: string) => {
+  try {
+    const contents = await callProxy('getDirectoryContents', { path })
+    if (contents && contents._404) return []
+    return (contents as any[]).map((item) => ({
+      ...item,
+      name: item.basename,
+      '.tag': item.type === 'directory' ? 'folder' : 'file',
+    }))
+  } catch (e: any) {
+    return []
+  }
 }
 
-export const dropboxBooksFetcher = (path: string) => {
-  return dbx
-    .filesDownload({ path })
-    .then((d) => {
-      const blob: Blob = (d.result as any).fileBlob
-      return readBlob((r) => r.readAsText(blob))
-    })
-    .then((d) => deserializeData(d))
+export const dropboxBooksFetcher = async (path: string) => {
+  try {
+    const text = await callProxy('getFileContents', { path, format: 'text' })
+    if (text && (text._404 || text.error)) return []
+    return deserializeData(text as string)
+  } catch (e: any) {
+    return []
+  }
+}
+
+// Helper for raw proxy access in index.tsx
+export async function proxyRequest(method: string, params: any) {
+  return callProxy(method, params)
 }
 
 export async function pack() {
@@ -125,7 +124,7 @@ export async function unpack(file: File) {
 
   const folder = zip.folder('files')
   folder?.forEach(async (_, f) => {
-    const book = books.find((b) => `files/${b.name}` === f.name)
+    const book = books.find((b) => `books/${b.name}` === f.name)
     if (!book) return
 
     const data = await f.async('blob')

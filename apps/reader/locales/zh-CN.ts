@@ -56,6 +56,13 @@ export default {
   'settings.cache.clear': '清除',
   'settings.text_selection_menu': '文本选择菜单',
   'settings.text_selection_menu.enable': '启用',
+  'settings.library_sort': '书籍排序依据',
+  'settings.library_sort.name': '文件名',
+  'settings.library_sort.createdAt': '添加时间',
+  'settings.library_sort.size': '文件大小',
+  'settings.library_sort_order': '排序方式',
+  'settings.library_sort_order.asc': '顺序',
+  'settings.library_sort_order.desc': '倒序',
 
   'menu.copy': '复制',
   'menu.search_in_book': '书内搜索',

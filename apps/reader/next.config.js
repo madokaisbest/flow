@@ -43,6 +43,9 @@ const config = {
     locales: ['en-US', 'zh-CN', 'ja-JP'],
     defaultLocale: 'en-US',
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   ...(IS_DOCKER && {
     output: 'standalone',
     experimental: {

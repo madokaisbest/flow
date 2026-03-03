@@ -27,9 +27,14 @@ export const navbarState = atom<boolean>({
   default: false,
 })
 
+export type SortField = 'name' | 'createdAt' | 'size'
+export type SortOrder = 'asc' | 'desc'
+
 export interface Settings extends TypographyConfiguration {
   theme?: ThemeConfiguration
   enableTextSelectionMenu?: boolean
+  librarySortField?: SortField
+  librarySortOrder?: SortOrder
 }
 
 export interface TypographyConfiguration {

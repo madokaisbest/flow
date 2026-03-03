@@ -9,9 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@github/mini-throttle": "2.1.0",
     "@flow/epubjs": "workspace:*",
     "@flow/internal": "workspace:*",
+    "@github/mini-throttle": "2.1.0",
     "@literal-ui/core": "0.0.13",
     "@literal-ui/hooks": "0.0.8",
     "@literal-ui/next": "0.0.3",
@@ -44,7 +44,8 @@
     "tilg": "0.1.1",
     "use-local-storage-state": "18.1.1",
     "uuid": "8.3.2",
-    "valtio": "1.6.0"
+    "valtio": "1.6.0",
+    "webdav": "5.9.0"
   },
   "devDependencies": {
     "@flow/tailwind": "workspace:*",

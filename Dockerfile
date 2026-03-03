@@ -45,6 +45,9 @@ COPY --from=installer /app/apps/reader/package.json .
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=installer --chown=nextjs:nodejs /app/apps/reader/.next/standalone ./
+COPY --from=installer --chown=nextjs:nodejs /app/apps/reader/public ./public
+COPY --from=installer --chown=nextjs:nodejs /app/apps/reader/public ./apps/reader/public
+COPY --from=installer --chown=nextjs:nodejs /app/apps/reader/.next/static ./.next/static
 COPY --from=installer --chown=nextjs:nodejs /app/apps/reader/.next/static ./apps/reader/.next/static
 
 CMD node apps/reader/server.js

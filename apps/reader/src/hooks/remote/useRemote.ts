@@ -7,7 +7,7 @@ import {
 } from '@flow/reader/sync'
 
 export function useRemoteFiles() {
-  return useSWR('/files', dropboxFilesFetcher, { shouldRetryOnError: false })
+  return useSWR('/books', dropboxFilesFetcher, { shouldRetryOnError: false })
 }
 
 export function useRemoteBooks() {

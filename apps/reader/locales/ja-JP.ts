@@ -56,6 +56,13 @@ export default {
   'settings.cache.clear': 'クリア',
   'settings.text_selection_menu': 'テキスト選択メニュー',
   'settings.text_selection_menu.enable': '有効化',
+  'settings.library_sort': '本の並べ替え',
+  'settings.library_sort.name': 'ファイル名',
+  'settings.library_sort.createdAt': '追加日時',
+  'settings.library_sort.size': 'ファイルサイズ',
+  'settings.library_sort_order': '並べ替え順',
+  'settings.library_sort_order.asc': '昇順',
+  'settings.library_sort_order.desc': '降順',
 
   'menu.copy': 'コピー',
   'menu.search_in_book': '本を検索',

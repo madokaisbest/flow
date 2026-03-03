@@ -56,6 +56,13 @@ export default {
   'settings.cache.clear': 'Clear',
   'settings.text_selection_menu': 'Text Selection Menu',
   'settings.text_selection_menu.enable': 'Enable',
+  'settings.library_sort': 'Library Sort',
+  'settings.library_sort.name': 'Name',
+  'settings.library_sort.createdAt': 'Added Time',
+  'settings.library_sort.size': 'File Size',
+  'settings.library_sort_order': 'Sort Order',
+  'settings.library_sort_order.asc': 'Ascending',
+  'settings.library_sort_order.desc': 'Descending',
 
   'menu.copy': 'Copy',
   'menu.search_in_book': 'Search in book',
