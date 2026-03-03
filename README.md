@@ -4,6 +4,10 @@
 
 <p align="center">Free. Open source. Browser-based.</p>
 
+<p align="center">
+  English | <a href="README-zh.md">简体中文</a>
+</p>
+
 <p align="center"><img src="apps/website/public/screenshots/01.webp"/>
 
 </p>
