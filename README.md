@@ -74,21 +74,20 @@ The `apps/reader` frontend has been adapted for static hosting, making it direct
 
 ### WebDAV Proxy (Cloudflare Worker)
 
-If you need to connect to an external WebDAV server securely and bypass CORS restrictions (especially necessary when hosting the frontend on Cloudflare Pages), you can deploy the included Cloudflare Worker as a proxy.
+If you need to connect to an external WebDAV server securely and bypass CORS restrictions (especially necessary when hosting the frontend on static hosting services), we recommend using GitHub Integration to deploy the included Cloudflare Worker as a proxy.
 
-1. Configure your WebDAV settings in `apps/webdav-proxy/wrangler.toml` (or use `.dev.vars` / Cloudflare Dashboard Secrets):
-   ```toml
-   [vars]
-   WEBDAV_URL = "https://your-backend-webdav.com/"
-   WEBDAV_DIR = "/books"
-   ```
-2. Deploy the worker:
-   ```sh
-   cd apps/webdav-proxy
-   npm install
-   npx wrangler deploy
-   ```
-3. Open the reader app in your browser, go to **Settings > WebDAV Sync**, and enter your deployed worker's URL (e.g., `https://webdav-proxy.<your-user>.workers.dev`), along with any required credentials for the proxy.
+#### Deployment via GitHub Auto Build:
+1. Log in to your Cloudflare Dashboard, navigate to **Workers & Pages**, and click **Create application** -> **Worker**.
+2. Connect your worker to your GitHub repository for automatic builds.
+3. Under **Build settings**, configure the following carefully:
+   - **Root directory**: `apps/webdav-proxy`
+   - **Build command**: *(Leave blank)*
+   - **Deploy command**: `npx wrangler deploy`
+4. ⚠️ **Crucial Step - Configuring Environment Variables**: Scroll down to the **Variables and secrets** section below. **DO NOT** use Plain Text. Click to add and select **Secret** as the type for these variables:
+   - Secret Name: `WEBDAV_URL`, Value: Your backend WebDAV server URL, e.g., `https://example.com/remote.php/webdav/`
+   - Secret Name: `WEBDAV_DIR`, Value: The base directory for your books, e.g., `/books`
+5. Click **Save and Deploy**.
+6. Open the Flow reader app in your browser, go to **Settings > WebDAV Sync**, and enter your newly deployed worker's URL (e.g., `https://webdav-proxy.<your-user>.workers.dev`), along with any required credentials for the proxy.
 
 ## Contributing
 

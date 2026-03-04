@@ -70,21 +70,21 @@ pnpm dev
 
 ### WebDAV Proxy 代理 (Cloudflare Worker)
 
-如果您需要安全地连接到外部 WebDAV 服务器，并希望绕过浏览器的跨域 (CORS) 限制（特别是在由 Cloudflare Pages 托管前端时），您可以部署项目中附带的 Cloudflare Worker 作为代理。
+如果您需要安全地直连到外部 WebDAV 服务器，并希望绕过浏览器的跨域 (CORS) 限制（特别是当前端由静态云服务托管时），建议通过 GitHub 集成自动部署对应的 Cloudflare Worker 代理进行流量无缝转发。
 
-1. 修改 `apps/webdav-proxy/wrangler.toml` 文件配置您的 WebDAV 服务（也可以在 Cloudflare 控制面板设置环境变量，或者使用 `.dev.vars` 供本地调试使用）：
-   ```toml
-   [vars]
-   WEBDAV_URL = "https://your-backend-webdav.com/"
-   WEBDAV_DIR = "/books"
-   ```
-2. 部署 Worker 代理：
-   ```sh
-   cd apps/webdav-proxy
-   npm install
-   npx wrangler deploy
-   ```
-3. 打开浏览器中的前端阅读器，前往 **Settings (设置) > WebDAV Sync**，填入您刚刚部署完成的 Worker 的 URL（例如 `https://webdav-proxy.<your-user>.workers.dev`）以及对应的账号密码凭据。
+#### 借助 GitHub 自动构建的部署步骤：
+1. 登录 Cloudflare 控制台，进入 **Workers & Pages** 面板，点击 **创建应用程序** -> **Worker**。
+2. 将您的 Worker 代码库连接至 GitHub 仓库分支进行自动构建。
+3. 在 **构建配置** 中进行如下设置：
+   - **根目录 (Root directory)**: `apps/webdav-proxy`
+   - **构建命令 (Build command)**: *(留空)*
+   - **部署命令 (Deploy command)**: `npx wrangler deploy`
+4. ⚠️ **最关键的一步配置环境变量**：在同一页面下方的 **“变量和机密 (Variables and secrets)”** 区域，**不要**选择纯文本类型。请点击添加并选择类型为 **机密 (Secret)** 添加以下两项配置：
+   - 机密名称: `WEBDAV_URL`，值: 填入您后端云盘的实际地址，例如 `https://ena.teracloud.jp/dav/`
+   - 机密名称: `WEBDAV_DIR`，值: 可选填入您储存书籍的初始路径，例如 `/books`
+5. 点击保存并执行首次部署 **(Save and Deploy)**。
+6. 最后，在浏览器中打开 Flow 阅读器前端页面，前往 **Settings (设置) > WebDAV Sync**。
+   填入您刚刚部署完成的 Worker 域名（例如 `https://webdav-proxy.xxxx.workers.dev`）以及原始云盘帐号密码即可。
 
 ## 参与贡献
 
