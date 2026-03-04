@@ -19,7 +19,7 @@ export default {
         }
 
         if (!env.WEBDAV_URL) {
-            return new Response("Missing WEBDAV_URL in env", { status: 500, headers: corsHeaders });
+            return new Response("Missing WEBDAV_URL in env. Available keys: " + JSON.stringify(Object.keys(env)), { status: 500, headers: corsHeaders });
         }
 
         // 2. 路由映射逻辑：保持与原先 Next.js 一致的 `/books` 替换逻辑
