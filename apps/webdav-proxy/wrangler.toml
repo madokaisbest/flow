@@ -1,6 +1,6 @@
 name = "webdav-proxy"
 main = "src/worker.ts"
-compatibility_date = "2024-03-04"
+compatibility_date = "2026-02-24"
 
 # 禁用所有默认路由配置以确保透明代理纯粹性
 workers_dev = true
