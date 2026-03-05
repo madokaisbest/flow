@@ -16,7 +16,7 @@ import { useRecoilState } from 'recoil'
 
 import {
   Env,
-  Action,
+  type Action as ActionType,
   useAction,
   useBackground,
   useColorScheme,
@@ -70,7 +70,7 @@ interface IAction {
   env: number
 }
 interface IViewAction extends IAction {
-  name: Action
+  name: ActionType
   View: React.FC<any>
 }
 
@@ -245,7 +245,7 @@ function NavigationBar() {
   )
 }
 
-interface ActionBarProps extends ComponentProps<'ul'> {}
+interface ActionBarProps extends ComponentProps<'ul'> { }
 function ActionBar({ className, ...props }: ActionBarProps) {
   return (
     <ul className={clsx('ActionBar flex sm:flex-col', className)} {...props} />
@@ -302,9 +302,9 @@ const SideBar: React.FC = () => {
         className={clsx(
           'SideBar bg-surface flex flex-col',
           !action && '!hidden',
-          mobile ? 'absolute inset-y-0 right-0 z-10' : '',
+          mobile ? 'absolute inset-x-0 bottom-0 z-20 rounded-t-2xl shadow-[0_-10px_30px_rgba(0,0,0,0.2)]' : '',
         )}
-        style={{ width: mobile ? '75%' : size }}
+        style={{ width: mobile ? '100%' : size, height: mobile ? '50vh' : undefined }}
       >
         {viewActions.map(({ name, title, View }) => (
           <View
@@ -319,7 +319,7 @@ const SideBar: React.FC = () => {
   )
 }
 
-interface ReaderProps extends ComponentProps<'div'> {}
+interface ReaderProps extends ComponentProps<'div'> { }
 const Reader: React.FC = ({ className, ...props }: ReaderProps) => {
   useSplitViewItem(Reader)
   const [bg] = useBackground()

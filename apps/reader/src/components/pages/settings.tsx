@@ -109,11 +109,12 @@ export const Settings: React.FC = () => {
         <Item title={t('cache')}>
           <Button
             variant="secondary"
-            onClick={() => {
-              window.localStorage.clear()
-              Dexie.getDatabaseNames().then((names) => {
-                names.forEach((n) => Dexie.delete(n))
-              })
+            onClick={async () => {
+              const names = await Dexie.getDatabaseNames()
+              for (const n of names) {
+                await Dexie.delete(n)
+              }
+              window.location.reload()
             }}
           >
             {t('cache.clear')}
@@ -151,34 +152,34 @@ const Synchronization: React.FC = () => {
         }
       })
       if (res.ok || res.status === 404 || res.status === 207) {
-        alert('Connection Successful!')
+        alert(t('connection_successful'))
       } else {
-        alert('Connection Failed: ' + res.status)
+        alert(t('connection_failed') + res.status)
       }
     } catch (e: any) {
-      alert('Connection Error: ' + e.message)
+      alert(t('connection_error') + e.message)
     }
   }
 
   return (
-    <Item title="WebDAV Sync">
+    <Item title={t('webdav_sync')}>
       <Select disabled>
         <option value="webdav">WebDAV</option>
       </Select>
       <div className="mt-4 flex flex-col gap-3">
         <TextField
-          name="WebDAV URL"
+          name={t('webdav_url')}
           value={config.url}
           onChange={(e: any) => setConfig({ ...config, url: e.target.value })}
           placeholder="https://server.com/remote.php/webdav/"
         />
         <TextField
-          name="Username"
+          name={t('username')}
           value={config.username}
           onChange={(e: any) => setConfig({ ...config, username: e.target.value })}
         />
         <TextField
-          name="Password"
+          name={t('password')}
           type="password"
           value={config.password}
           onChange={(e: any) => setConfig({ ...config, password: e.target.value })}
@@ -190,10 +191,10 @@ const Synchronization: React.FC = () => {
               window.location.reload()
             }}
           >
-            Save
+            {t('save')}
           </Button>
           <Button variant="secondary" onClick={testConnection}>
-            Test Connection
+            {t('test_connection')}
           </Button>
           {isConfigured && (
             <Button
@@ -204,7 +205,7 @@ const Synchronization: React.FC = () => {
                 window.location.reload()
               }}
             >
-              Logout / Clear
+              {t('logout_clear')}
             </Button>
           )}
         </div>

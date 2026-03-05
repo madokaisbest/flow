@@ -111,6 +111,7 @@ const Library: React.FC = () => {
 
   const [loading, setLoading] = useState<string | undefined>()
   const [readyToSync, setReadyToSync] = useState(false)
+  const [filterText, setFilterText] = useState('')
 
   const { groups } = useReaderSnapshot()
 
@@ -218,7 +219,16 @@ const Library: React.FC = () => {
   const selectedBooks = [...selectedBookIds].map(
     (id) => books.find((b) => b.id === id)!,
   )
-  const allSelected = selectedBookIds.size === books.length
+
+  const displayedBooks = filterText
+    ? books.filter(b =>
+      b.name.toLowerCase().includes(filterText.toLowerCase()) ||
+      b.metadata?.title?.toLowerCase().includes(filterText.toLowerCase()) ||
+      b.metadata?.creator?.toLowerCase().includes(filterText.toLowerCase())
+    )
+    : books
+
+  const allSelected = selectedBookIds.size === displayedBooks.length
 
   return (
     <DropZone
@@ -235,8 +245,10 @@ const Library: React.FC = () => {
         <div>
           <TextField
             name={SOURCE}
-            placeholder="https://link.to/remote.epub"
-            type="url"
+            placeholder="https://link.to/remote.epub / Search..."
+            type="text"
+            value={filterText}
+            onChange={(e: any) => setFilterText(e.target.value)}
             hideLabel
             actions={[
               {
@@ -252,7 +264,11 @@ const Library: React.FC = () => {
                 title: t('download'),
                 Icon: MdOutlineFileDownload,
                 onClick(el) {
-                  if (el?.reportValidity()) fetchBook(el.value)
+                  if (el?.value && el.value.startsWith('http')) {
+                    fetchBook(el.value)
+                  } else {
+                    el?.reportValidity()
+                  }
                 },
               },
             ]}
@@ -285,7 +301,7 @@ const Library: React.FC = () => {
               ) : (
                 <Button
                   variant="secondary"
-                  onClick={() => books.forEach((b) => add(b.id))}
+                  onClick={() => displayedBooks.forEach((b) => add(b.id))}
                 >
                   {t('select_all')}
                 </Button>
@@ -410,7 +426,7 @@ const Library: React.FC = () => {
             rowGap: lock(24, 40),
           }}
         >
-          {books.map((book) => (
+          {displayedBooks.map((book) => (
             <Book
               key={book.id}
               book={book}
