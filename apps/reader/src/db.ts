@@ -22,6 +22,8 @@ export interface BookRecord {
   id: string
   name: string
   size: number
+  status?: 'local' | 'remote'
+  remotePath?: string
   metadata: PackagingMetadataObject
   createdAt: number
   updatedAt?: number
@@ -98,14 +100,14 @@ export class DB extends Dexie {
       })
       .upgrade(async (t) => {
         const books = await t.table('books').toArray()
-        ;['covers', 'files'].forEach((tableName) => {
-          t.table(tableName)
-            .toCollection()
-            .modify((r) => {
-              const book = books.find((b) => b.name === r.id)
-              if (book) r.id = book.id
-            })
-        })
+          ;['covers', 'files'].forEach((tableName) => {
+            t.table(tableName)
+              .toCollection()
+              .modify((r) => {
+                const book = books.find((b) => b.name === r.id)
+                if (book) r.id = book.id
+              })
+          })
       })
     this.version(1).stores({
       books: 'id, name, createdAt, cfi, percentage, definitions', // Primary key and indexed props

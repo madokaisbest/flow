@@ -146,3 +146,109 @@ export async function unpack(file: File) {
     db?.files.put({ file, id: book.id })
   })
 }
+
+declare const DecompressionStream: any;
+async function decompress(compressedData: Uint8Array): Promise<Uint8Array> {
+  const ds = new DecompressionStream('deflate-raw')
+  const writer = ds.writable.getWriter()
+  writer.write(compressedData as any)
+  writer.close()
+  return new Uint8Array(await new Response(ds.readable).arrayBuffer())
+}
+
+export async function fetchRemoteEpubCover(path: string): Promise<string | null> {
+  try {
+    const client = getWebDAVClient() as any
+    const fileContent = await client.getFileContents(path, { format: 'binary', headers: { Range: 'bytes=0-262143' } }) as ArrayBuffer
+    const bytes = new Uint8Array(fileContent as ArrayBuffer)
+    let offset = 0
+
+    const files: Record<string, Uint8Array> = {}
+
+    while (offset + 30 <= bytes.length) {
+      if (bytes[offset] !== 0x50 || bytes[offset + 1] !== 0x4B || bytes[offset + 2] !== 0x03 || bytes[offset + 3] !== 0x04) break
+
+      const flags = bytes[offset + 6]! | (bytes[offset + 7]! << 8)
+      const method = bytes[offset + 8]! | (bytes[offset + 9]! << 8)
+
+      if ((flags & 8) !== 0) break
+
+      const compressedSize = bytes[offset + 18]! | (bytes[offset + 19]! << 8) | (bytes[offset + 20]! << 16) | (bytes[offset + 21]! << 24)
+      const filenameLen = bytes[offset + 26]! | (bytes[offset + 27]! << 8)
+      const extraLen = bytes[offset + 28]! | (bytes[offset + 29]! << 8)
+
+      const filenameStart = offset + 30
+      const filenameEnd = filenameStart + filenameLen
+      if (filenameEnd > bytes.length) break
+      const name = new TextDecoder().decode(bytes.subarray(filenameStart, filenameEnd))
+
+      const dataStart = filenameEnd + extraLen
+      const dataEnd = dataStart + compressedSize
+      if (dataEnd > bytes.length) break
+
+      const cData = bytes.subarray(dataStart, dataEnd)
+      if (method === 8) {
+        try { files[name] = await decompress(cData) } catch (e) { }
+      } else if (method === 0) {
+        files[name] = cData
+      }
+      offset = dataEnd
+    }
+
+    const containerFile = files['META-INF/container.xml']
+    if (!containerFile) return null
+    const containerXml = new TextDecoder().decode(containerFile)
+
+    const opfMatch = /<rootfile[^>]+full-path="([^"]+)"/i.exec(containerXml)
+    if (!opfMatch || !opfMatch[1]) return null
+    const opfPath = opfMatch[1]
+
+    const opfFile = files[opfPath]
+    if (!opfFile) return null
+    const opfXml = new TextDecoder().decode(opfFile)
+
+    let coverIdMatch = /<meta[^>]+name="cover"[^>]+content="([^"]+)"/i.exec(opfXml)
+    if (!coverIdMatch) {
+      coverIdMatch = /<meta[^>]+content="([^"]+)"[^>]+name="cover"/i.exec(opfXml)
+    }
+
+    let coverHref = null
+    if (coverIdMatch) {
+      const coverId = coverIdMatch[1]
+      let itemMatch = new RegExp(`<item[^>]+id="${coverId}"[^>]+href="([^"]+)"`, 'i').exec(opfXml)
+      if (!itemMatch) itemMatch = new RegExp(`<item[^>]+href="([^"]+)"[^>]+id="${coverId}"`, 'i').exec(opfXml)
+      if (itemMatch) coverHref = itemMatch[1]
+    }
+
+    if (!coverHref) {
+      const itemMatch = /<item[^>]+href="([^"]+)"[^>]+properties="cover-image"[^>]*>/i.exec(opfXml)
+      if (itemMatch) coverHref = itemMatch[1]
+    }
+
+    if (!coverHref) return null
+
+    const opfDir = opfPath.includes('/') ? opfPath.substring(0, opfPath.lastIndexOf('/')) : ''
+    const coverPath = opfDir ? `${opfDir}/${decodeURIComponent(coverHref)}` : decodeURIComponent(coverHref)
+
+    const coverFile = files[coverPath]
+    if (!coverFile) return null
+
+    let mime = 'image/jpeg'
+    const lowerPath = coverPath.toLowerCase()
+    if (lowerPath.endsWith('.png')) mime = 'image/png'
+    else if (lowerPath.endsWith('.gif')) mime = 'image/gif'
+    else if (lowerPath.endsWith('.webp')) mime = 'image/webp'
+    else if (lowerPath.endsWith('.svg')) mime = 'image/svg+xml'
+
+    let binary = ''
+    const chunkSize = 8192
+    for (let i = 0; i < coverFile.length; i += chunkSize) {
+      binary += String.fromCharCode.apply(null, coverFile.subarray(i, i + chunkSize) as any)
+    }
+    return `data:${mime};base64,${btoa(binary)}`
+  } catch (e) {
+    console.warn("Failed to fetch remote cover", e)
+    return null
+  }
+}
+

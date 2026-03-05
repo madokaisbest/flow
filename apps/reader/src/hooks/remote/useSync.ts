@@ -20,7 +20,7 @@ export function useSync(tab: BookTab) {
       mutate(
         (remoteBooks) => {
           if (remoteBooks) {
-            const i = remoteBooks.findIndex((b) => b.id === id)
+            const i = remoteBooks.findIndex((b) => b && b.id === id)
             if (i < 0) return remoteBooks
 
             remoteBooks[i] = {
