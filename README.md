@@ -23,6 +23,7 @@
 - Share/Download book with link
 - Data export
 - Cloud storage
+- **Cloud Preview Mode**: View your entire shelf without downloading full ePubs. On-demand loading with lightning-fast SVG cover placeholding.
 
 For planed features, see our [roadmap](https://pacexy.notion.site/283696d0071c43bfb03652e8e5f47936?v=b43f4dd7a3cb4ce785d6c32b698a8ff5).
 
