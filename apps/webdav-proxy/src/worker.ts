@@ -1,13 +1,52 @@
 export interface Env {
     WEBDAV_URL: string;
     WEBDAV_DIR?: string;
+    ALLOWED_ORIGINS?: string;
 }
 
 export default {
     async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+        // 0. 安全限制：检查 Origin 或 Referer
+        let requestOrigin = request.headers.get("Origin") || request.headers.get("Referer") || "";
+        
+        let exactOrigin = requestOrigin;
+        try {
+            if (requestOrigin) {
+                const parsedUrl = new URL(requestOrigin);
+                exactOrigin = `${parsedUrl.protocol}//${parsedUrl.host}`;
+            }
+        } catch { }
+
+        let allowedOrigin = "*";
+
+        if (env.ALLOWED_ORIGINS) {
+            const allowedList = env.ALLOWED_ORIGINS.split(",").map(url => url.trim().replace(/\/$/, ""));
+            
+            if (!requestOrigin) {
+                return new Response("403 Forbidden: Missing Origin or Referer header", { status: 403 });
+            }
+
+            const isAllowed = allowedList.some(allowed => {
+                if (exactOrigin === allowed) return true;
+                // 允许配置像 https://*.pages.dev 这样的通配符
+                if (allowed.includes("*")) {
+                    const regex = new RegExp("^" + allowed.replace(/\./g, "\\.").replace(/\*/g, ".*") + "$");
+                    return regex.test(exactOrigin);
+                }
+                return false;
+            });
+            
+            if (!isAllowed) {
+                return new Response(`403 Forbidden: Origin ${exactOrigin} is not allowed`, { status: 403 });
+            }
+            
+            // 如果有限制，CORS Origin 限定为具体来路
+            allowedOrigin = request.headers.get("Origin") || exactOrigin;
+        }
+
         // 1. CORS 配置：允许跨域及所有 WebDAV 方法
-        const corsHeaders = {
-            "Access-Control-Allow-Origin": "*",
+        const corsHeaders: Record<string, string> = {
+            "Access-Control-Allow-Origin": allowedOrigin,
             "Access-Control-Allow-Methods": "GET, HEAD, POST, PUT, DELETE, OPTIONS, PROPFIND, PROPPATCH, MKCOL, COPY, MOVE, LOCK, UNLOCK",
             "Access-Control-Allow-Headers": "*",
             "Access-Control-Expose-Headers": "*",
@@ -55,8 +94,8 @@ export default {
 
             // 6. 处理响应的 CORS，让前端能访问所有自定义头信息
             const responseHeaders = new Headers(response.headers);
-            responseHeaders.set("Access-Control-Allow-Origin", "*");
-            responseHeaders.set("Access-Control-Allow-Methods", corsHeaders["Access-Control-Allow-Methods"]);
+            responseHeaders.set("Access-Control-Allow-Origin", allowedOrigin);
+            responseHeaders.set("Access-Control-Allow-Methods", corsHeaders["Access-Control-Allow-Methods"] as string);
             responseHeaders.set("Access-Control-Expose-Headers", "*");
 
             return new Response(response.body, {
