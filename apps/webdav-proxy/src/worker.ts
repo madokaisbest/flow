@@ -75,45 +75,26 @@ export default {
         const targetUrl = env.WEBDAV_URL.replace(/\/$/, "") + path + url.search;
 
         // 4. 重写 Header 并透传 Authorization（不存储任何凭据）
-        const headers = new Headers();
-        
-        // 允许透传的 Header 列表 (必须小写)
-        const allowedClientHeaders = [
-            "authorization",
-            "content-type",
-            "content-length",
-            "accept",
-            "accept-language",
-            "user-agent",
-            "depth",
-            "overwrite",
-            "if-match",
-            "if-none-match",
-            "range",
-            "timeout",
-            "lock-token",
-            "if"
-        ];
+        const headers = new Headers(request.headers);
+        headers.delete("Host");     // 必须移除前端请求的 Host
+        headers.delete("Origin");
+        headers.delete("Referer");
 
-        request.headers.forEach((value, key) => {
-            const lowerKey = key.toLowerCase();
-            if (allowedClientHeaders.includes(lowerKey) || lowerKey.startsWith("x-")) {
-                headers.set(key, value);
-            } else if (lowerKey === "destination") {
-                // 针对 MOVE/COPY 等 WebDAV 操作，需要重写 Destination 的 URL 路径
-                try {
-                    const destUrl = new URL(value);
-                    let destPath = destUrl.pathname;
-                    if (destPath.startsWith("/books")) {
-                        destPath = destPath.replace(/^\/books/, baseDir === "/" ? "" : baseDir);
-                    }
-                    const newDest = env.WEBDAV_URL.replace(/\/$/, "") + destPath;
-                    headers.set(key, newDest);
-                } catch {
-                    headers.set(key, value); // Fallback
+        // 针对 MOVE/COPY 等 WebDAV 操作，需要重写 Destination 的 URL 路径
+        const destHeader = headers.get("Destination");
+        if (destHeader) {
+            try {
+                const destUrl = new URL(destHeader);
+                let destPath = destUrl.pathname;
+                if (destPath.startsWith("/books")) {
+                    destPath = destPath.replace(/^\/books/, baseDir === "/" ? "" : baseDir);
                 }
+                const newDest = env.WEBDAV_URL.replace(/\/$/, "") + destPath;
+                headers.set("Destination", newDest);
+            } catch {
+                // Ignore parse errors, leave it as is
             }
-        });
+        }
 
         // 5. 将原生请求流作为 body 转发给目标 WebDAV Server (实现 Streaming)
         const init: RequestInit = {
