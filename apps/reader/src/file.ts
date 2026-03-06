@@ -50,6 +50,7 @@ export async function addBook(file: File) {
     size: file.size,
     metadata,
     createdAt: Date.now(),
+    updatedAt: Date.now(),
     definitions: [],
     annotations: [],
   }

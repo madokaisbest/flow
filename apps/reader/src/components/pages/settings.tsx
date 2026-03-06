@@ -89,6 +89,7 @@ export const Settings: React.FC = () => {
             >
               <option value="name">{t('library_sort.name')}</option>
               <option value="createdAt">{t('library_sort.createdAt')}</option>
+              <option value="updatedAt">{t('library_sort.updatedAt')}</option>
               <option value="size">{t('library_sort.size')}</option>
             </Select>
             <Select

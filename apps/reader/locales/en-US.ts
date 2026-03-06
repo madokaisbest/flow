@@ -69,6 +69,7 @@ export default {
   'settings.library_sort': 'Library Sort',
   'settings.library_sort.name': 'Name',
   'settings.library_sort.createdAt': 'Added Time',
+  'settings.library_sort.updatedAt': 'Recent Read',
   'settings.library_sort.size': 'File Size',
   'settings.library_sort_order': 'Sort Order',
   'settings.library_sort_order.asc': 'Ascending',

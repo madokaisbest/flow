@@ -69,6 +69,7 @@ export default {
   'settings.library_sort': '本の並べ替え',
   'settings.library_sort.name': 'ファイル名',
   'settings.library_sort.createdAt': '追加日時',
+  'settings.library_sort.updatedAt': '最近開いた日時',
   'settings.library_sort.size': 'ファイルサイズ',
   'settings.library_sort_order': '並べ替え順',
   'settings.library_sort_order.asc': '昇順',

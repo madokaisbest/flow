@@ -174,6 +174,7 @@ const Library: React.FC = () => {
             remotePath: `/books/${remoteFile.name}`,
             metadata: { title, creator: author },
             createdAt: new Date(remoteFile.lastmod).getTime() || Date.now(),
+            updatedAt: new Date(remoteFile.lastmod).getTime() || Date.now(),
             definitions: [],
             annotations: [],
           } as any as BookRecord

@@ -69,6 +69,7 @@ export default {
   'settings.library_sort': '书籍排序依据',
   'settings.library_sort.name': '文件名',
   'settings.library_sort.createdAt': '添加时间',
+  'settings.library_sort.updatedAt': '最近阅读',
   'settings.library_sort.size': '文件大小',
   'settings.library_sort_order': '排序方式',
   'settings.library_sort_order.asc': '顺序',

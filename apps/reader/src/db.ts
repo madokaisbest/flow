@@ -46,6 +46,19 @@ export class DB extends Dexie {
   constructor(name: string) {
     super(name)
 
+    this.version(7)
+      .stores({
+        books:
+          'id, name, size, status, metadata, createdAt, updatedAt, cfi, percentage, definitions, annotations, configuration',
+      })
+      .upgrade(async (t) => {
+        t.table('books')
+          .toCollection()
+          .modify((r) => {
+            if (!r.updatedAt) r.updatedAt = r.createdAt
+          })
+      })
+
     this.version(6).stores({
       books:
         'id, name, size, status, metadata, createdAt, updatedAt, cfi, percentage, definitions, annotations, configuration',
