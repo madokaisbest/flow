@@ -366,18 +366,15 @@ export class BookTab extends BaseTab {
         allowScriptedContent: true,
       }),
     )
-    console.log(this.rendition)
     this.rendition.display(
       this.location?.start.cfi ?? this.book.cfi ?? undefined,
     )
     this.rendition.themes.default(defaultStyle)
     this.rendition.hooks.render.register((view: any) => {
-      console.log('hooks.render', view)
       this.onRender?.()
     })
 
     this.rendition.on('relocated', (loc: Location) => {
-      console.log('relocated', loc)
       this.rendered = true
       this.timeline.unshift({
         location: loc,

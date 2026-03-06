@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import { useLiveQuery } from 'dexie-react-hooks'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import {
   MdCheckBox,
   MdCheckBoxOutlineBlank,
@@ -110,6 +110,7 @@ const Library: React.FC = () => {
   const [selectedBookIds, { add, has, toggle, reset }] = useSet<string>()
 
   const [loading, setLoading] = useState<string | undefined>()
+  const loadingRef = useRef<boolean>(false)
   const [readyToSync, setReadyToSync] = useState(false)
   const [filterText, setFilterText] = useState('')
 
@@ -449,6 +450,8 @@ const Library: React.FC = () => {
               loading={loading === book.id}
               toggle={toggle}
               onOpen={async (bookToOpen, onReady) => {
+                if (loadingRef.current) return
+                loadingRef.current = true
                 setLoading(bookToOpen.id)
                 try {
                   // 1. Sync the latest remote metadata/progress first
@@ -480,6 +483,7 @@ const Library: React.FC = () => {
                   console.error(e)
                 } finally {
                   setLoading(undefined)
+                  loadingRef.current = false
                 }
               }}
             />
