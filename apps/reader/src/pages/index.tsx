@@ -136,7 +136,16 @@ const Library: React.FC = () => {
     if (!previousRemoteBooks && remoteBooks) {
       const validBooks = Array.isArray(remoteBooks) ? remoteBooks.filter((b: any) => b && b.id) : []
       if (validBooks.length > 0) {
-        db?.books.bulkPut(validBooks).then(() => setReadyToSync(true)).catch(console.error)
+        db?.books.toArray().then((localBooks) => {
+          const mergedBooks = validBooks.map((rb: any) => {
+            const lb = localBooks.find((l) => l.id === rb.id)
+            if (lb && lb.status === 'local') {
+              return { ...rb, status: 'local' }
+            }
+            return rb
+          })
+          return db?.books.bulkPut(mergedBooks)
+        }).then(() => setReadyToSync(true)).catch(console.error)
       } else {
         setReadyToSync(true)
       }

@@ -46,6 +46,11 @@ export class DB extends Dexie {
   constructor(name: string) {
     super(name)
 
+    this.version(6).stores({
+      books:
+        'id, name, size, status, metadata, createdAt, updatedAt, cfi, percentage, definitions, annotations, configuration',
+    })
+
     this.version(5).stores({
       books:
         'id, name, size, metadata, createdAt, updatedAt, cfi, percentage, definitions, annotations, configuration',

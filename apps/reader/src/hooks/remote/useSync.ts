@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useSnapshot } from 'valtio'
 
 import { Annotation } from '@flow/reader/annotation'
@@ -14,27 +14,40 @@ export function useSync(tab: BookTab) {
 
   const id = tab.book.id
 
+  const changesBufferRef = useRef<Partial<BookRecord>>({})
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+
   const sync = useCallback(
-    async (changes: Partial<BookRecord>) => {
-      // to remove effect dependency `remoteBooks`
-      mutate(
-        (remoteBooks) => {
-          if (remoteBooks) {
-            const i = remoteBooks.findIndex((b) => b && b.id === id)
-            if (i < 0) return remoteBooks
+    (changes: Partial<BookRecord>) => {
+      Object.assign(changesBufferRef.current, changes)
 
-            remoteBooks[i] = {
-              ...remoteBooks[i]!,
-              ...changes,
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+
+      timeoutRef.current = setTimeout(() => {
+        const mergedChanges = { ...changesBufferRef.current }
+        changesBufferRef.current = {}
+
+        mutate(
+          (remoteBooks) => {
+            if (remoteBooks) {
+              const i = remoteBooks.findIndex((b) => b && b.id === id)
+              if (i < 0) return remoteBooks
+
+              remoteBooks[i] = {
+                ...remoteBooks[i]!,
+                ...mergedChanges,
+              }
+
+              uploadData(remoteBooks)
+
+              return [...remoteBooks]
             }
-
-            uploadData(remoteBooks)
-
-            return [...remoteBooks]
-          }
-        },
-        { revalidate: false },
-      )
+          },
+          { revalidate: false },
+        )
+      }, 3000)
     },
     [id, mutate],
   )
