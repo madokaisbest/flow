@@ -288,8 +288,8 @@ const Library: React.FC = () => {
             ]}
           />
         </div>
-        <div className="flex items-center justify-between gap-4">
-          <div className="space-x-2">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-wrap gap-2">
             {books.length ? (
               <Button variant="secondary" onClick={toggleSelect}>
                 {t(select ? 'cancel' : 'select')}
@@ -322,7 +322,7 @@ const Library: React.FC = () => {
               ))}
           </div>
 
-          <div className="space-x-2">
+          <div className="flex flex-wrap gap-2">
             {select ? (
               <>
                 <Button
