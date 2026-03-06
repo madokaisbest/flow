@@ -139,6 +139,9 @@ const Library: React.FC = () => {
         db?.books.toArray().then((localBooks) => {
           const mergedBooks = validBooks.map((rb: any) => {
             const lb = localBooks.find((l) => l.id === rb.id)
+            if (!rb.updatedAt) {
+              rb.updatedAt = rb.createdAt || Date.now()
+            }
             if (lb && lb.status === 'local') {
               return { ...rb, status: 'local' }
             }

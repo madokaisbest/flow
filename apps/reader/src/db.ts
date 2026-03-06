@@ -20,13 +20,20 @@ export interface CoverRecord {
 export interface BookRecord {
   // TODO: use file hash as id
   id: string
+  hash?: string
   name: string
+  title?: string
+  author?: string
   size: number
   status?: 'local' | 'remote'
   remotePath?: string
   metadata: PackagingMetadataObject
   createdAt: number
   updatedAt?: number
+  lastReadAt?: number
+  readingTime?: number
+  isFavorite?: boolean
+  tags?: string[]
   cfi?: string
   percentage?: number
   definitions: string[]
@@ -46,89 +53,9 @@ export class DB extends Dexie {
   constructor(name: string) {
     super(name)
 
-    this.version(7)
-      .stores({
-        books:
-          'id, name, size, status, metadata, createdAt, updatedAt, cfi, percentage, definitions, annotations, configuration',
-      })
-      .upgrade(async (t) => {
-        t.table('books')
-          .toCollection()
-          .modify((r) => {
-            if (!r.updatedAt) r.updatedAt = r.createdAt
-          })
-      })
-
-    this.version(6).stores({
-      books:
-        'id, name, size, status, metadata, createdAt, updatedAt, cfi, percentage, definitions, annotations, configuration',
-    })
-
-    this.version(5).stores({
-      books:
-        'id, name, size, metadata, createdAt, updatedAt, cfi, percentage, definitions, annotations, configuration',
-    })
-
-    this.version(4)
-      .stores({
-        books:
-          'id, name, size, metadata, createdAt, updatedAt, cfi, percentage, definitions, annotations',
-      })
-      .upgrade(async (t) => {
-        t.table('books')
-          .toCollection()
-          .modify((r) => {
-            r.annotations = []
-          })
-      })
-
-    this.version(3)
-      .stores({
-        books:
-          'id, name, size, metadata, createdAt, updatedAt, cfi, percentage, definitions',
-      })
-      .upgrade(async (t) => {
-        const files = await t.table('files').toArray()
-
-        const metadatas = await Dexie.waitFor(
-          Promise.all(
-            files.map(async ({ file }) => {
-              const epub = await fileToEpub(file)
-              return epub.loaded.metadata
-            }),
-          ),
-        )
-
-        return t
-          .table('books')
-          .toCollection()
-          .modify(async (r) => {
-            const i = files.findIndex((f) => f.id === r.id)
-            r.metadata = metadatas[i]
-            r.size = files[i].file.size
-          })
-          .catch((e) => {
-            console.error(e)
-            throw e
-          })
-      })
-    this.version(2)
-      .stores({
-        books: 'id, name, createdAt, cfi, percentage, definitions',
-      })
-      .upgrade(async (t) => {
-        const books = await t.table('books').toArray()
-          ;['covers', 'files'].forEach((tableName) => {
-            t.table(tableName)
-              .toCollection()
-              .modify((r) => {
-                const book = books.find((b) => b.name === r.id)
-                if (book) r.id = book.id
-              })
-          })
-      })
     this.version(1).stores({
-      books: 'id, name, createdAt, cfi, percentage, definitions', // Primary key and indexed props
+      books:
+        'id, hash, name, title, author, size, status, metadata, createdAt, updatedAt, lastReadAt, isFavorite, *tags, cfi, percentage, definitions, annotations, configuration',
       covers: 'id, cover',
       files: 'id, file',
     })
