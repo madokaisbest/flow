@@ -74,6 +74,7 @@ export default {
   'settings.library_sort_order': '並べ替え順',
   'settings.library_sort_order.asc': '昇順',
   'settings.library_sort_order.desc': '降順',
+  'settings.library_sort_local_first': 'ローカル優先',
 
   'menu.copy': 'コピー',
   'menu.search_in_book': '本を検索',

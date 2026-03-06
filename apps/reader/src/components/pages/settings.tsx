@@ -77,33 +77,45 @@ export const Settings: React.FC = () => {
           />
         </Item>
         <Item title={t('library_sort')}>
-          <div className="flex gap-2">
-            <Select
-              value={settings.librarySortField || 'createdAt'}
+          <div className="flex flex-col gap-4">
+            <div className="flex gap-2">
+              <Select
+                value={settings.librarySortField || 'createdAt'}
+                onChange={(e) => {
+                  setSettings({
+                    ...settings,
+                    librarySortField: e.target.value as any,
+                  })
+                }}
+              >
+                <option value="name">{t('library_sort.name')}</option>
+                <option value="createdAt">{t('library_sort.createdAt')}</option>
+                <option value="updatedAt">{t('library_sort.updatedAt')}</option>
+                <option value="size">{t('library_sort.size')}</option>
+              </Select>
+              <Select
+                value={settings.librarySortOrder || 'desc'}
+                onChange={(e) => {
+                  setSettings({
+                    ...settings,
+                    librarySortOrder: e.target.value as any,
+                  })
+                }}
+              >
+                <option value="asc">{t('library_sort_order.asc')}</option>
+                <option value="desc">{t('library_sort_order.desc')}</option>
+              </Select>
+            </div>
+            <Checkbox
+              name={t('library_sort_local_first')}
+              checked={settings.librarySortLocalFirst ?? true}
               onChange={(e) => {
                 setSettings({
                   ...settings,
-                  librarySortField: e.target.value as any,
+                  librarySortLocalFirst: e.target.checked,
                 })
               }}
-            >
-              <option value="name">{t('library_sort.name')}</option>
-              <option value="createdAt">{t('library_sort.createdAt')}</option>
-              <option value="updatedAt">{t('library_sort.updatedAt')}</option>
-              <option value="size">{t('library_sort.size')}</option>
-            </Select>
-            <Select
-              value={settings.librarySortOrder || 'desc'}
-              onChange={(e) => {
-                setSettings({
-                  ...settings,
-                  librarySortOrder: e.target.value as any,
-                })
-              }}
-            >
-              <option value="asc">{t('library_sort_order.asc')}</option>
-              <option value="desc">{t('library_sort_order.desc')}</option>
-            </Select>
+            />
           </div>
         </Item>
         <Synchronization />

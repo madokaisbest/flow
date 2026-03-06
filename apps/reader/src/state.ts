@@ -35,6 +35,7 @@ export interface Settings extends TypographyConfiguration {
   enableTextSelectionMenu?: boolean
   librarySortField?: SortField
   librarySortOrder?: SortOrder
+  librarySortLocalFirst?: boolean
 }
 
 export interface TypographyConfiguration {

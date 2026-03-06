@@ -378,6 +378,32 @@ const Library: React.FC = () => {
                 <Button
                   onClick={async () => {
                     toggleSelect()
+
+                    for (const book of selectedBooks) {
+                      if (book.status !== 'remote') continue
+
+                      setLoading(book.id)
+                      try {
+                        const contents = await proxyRequest('getFileContents', {
+                          path: `/books/${book.name}`,
+                          format: 'binary',
+                        })
+                        await addFile(book.id, new File([contents as ArrayBuffer], book.name))
+                        book.status = 'local'
+                        await db?.books.put(book)
+                      } catch (err) {
+                        console.error('Download failed:', err)
+                      } finally {
+                        setLoading(undefined)
+                      }
+                    }
+                  }}
+                >
+                  {t('download')}
+                </Button>
+                <Button
+                  onClick={async () => {
+                    toggleSelect()
                     const bookIds = [...selectedBookIds]
 
                     db?.books.bulkDelete(bookIds)

@@ -74,6 +74,7 @@ export default {
   'settings.library_sort_order': 'Sort Order',
   'settings.library_sort_order.asc': 'Ascending',
   'settings.library_sort_order.desc': 'Descending',
+  'settings.library_sort_local_first': 'Local First',
 
   'menu.copy': 'Copy',
   'menu.search_in_book': 'Search in book',

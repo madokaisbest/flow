@@ -72,8 +72,9 @@ export default {
   'settings.library_sort.updatedAt': '最近阅读',
   'settings.library_sort.size': '文件大小',
   'settings.library_sort_order': '排序方式',
-  'settings.library_sort_order.asc': '顺序',
-  'settings.library_sort_order.desc': '倒序',
+  'settings.library_sort_order.asc': '升序',
+  'settings.library_sort_order.desc': '降序',
+  'settings.library_sort_local_first': '本地优先',
 
   'menu.copy': '复制',
   'menu.search_in_book': '书内搜索',

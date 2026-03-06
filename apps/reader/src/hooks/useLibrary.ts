@@ -15,6 +15,14 @@ export function useLibrary() {
     if (order === 'desc') {
       collection = collection.reverse()
     }
-    return collection.toArray()
-  }, [settings.librarySortField, settings.librarySortOrder])
+    return collection.toArray().then((results) => {
+      const localFirst = settings.librarySortLocalFirst ?? true
+      if (localFirst) {
+        const local = results.filter((b) => b.status === 'local' || !b.status)
+        const remote = results.filter((b) => b.status === 'remote')
+        return [...local, ...remote]
+      }
+      return results
+    })
+  }, [settings.librarySortField, settings.librarySortOrder, settings.librarySortLocalFirst])
 }
