@@ -11,7 +11,7 @@
   "dependencies": {
     "@flow/epubjs": "workspace:*",
     "@flow/internal": "workspace:*",
-    "@github/mini-throttle": "2.1.0",
+    "@github/mini-throttle": "2.1.1",
     "@literal-ui/core": "0.0.13",
     "@literal-ui/hooks": "0.0.8",
     "@literal-ui/next": "0.0.4",
