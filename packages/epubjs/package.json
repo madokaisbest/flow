@@ -50,8 +50,8 @@
     "tsd-jsdoc": "^2.5.0",
     "webpack": "^5.105.4",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-middleware": "^7.4.5",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-middleware": "^3.7.2",
+    "webpack-dev-server": "^5.2.3"
   },
   "dependencies": {
     "@types/localforage": "0.0.34",
