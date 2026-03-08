@@ -4,7 +4,6 @@ import Dexie, { Table } from 'dexie'
 import { PackagingMetadataObject } from '@flow/epubjs/types/packaging'
 
 import { Annotation } from './annotation'
-import { fileToEpub } from './file'
 import { TypographyConfiguration } from './state'
 
 export interface FileRecord {

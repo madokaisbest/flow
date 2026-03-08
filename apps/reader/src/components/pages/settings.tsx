@@ -1,12 +1,7 @@
 import Dexie from 'dexie'
-import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 
-import {
-  ColorScheme,
-  useColorScheme,
-  useTranslation,
-} from '@flow/reader/hooks'
+import { ColorScheme, useColorScheme, useTranslation } from '@flow/reader/hooks'
 import { useSettings } from '@flow/reader/state'
 import { WEB_DAV_CONFIG_KEY } from '@flow/reader/sync'
 
@@ -33,7 +28,7 @@ export const Settings: React.FC = () => {
           setCurrentLocale('ja-JP')
         }
       }
-    } catch { }
+    } catch {}
   }, [])
 
   return (
@@ -148,21 +143,23 @@ const Synchronization: React.FC = () => {
       if (stored) {
         setConfig(JSON.parse(stored))
       }
-    } catch { }
+    } catch {}
   }, [])
 
   const isConfigured = !!config.url && !!config.username && !!config.password
 
   const testConnection = async () => {
     try {
-      const auth = btoa(unescape(encodeURIComponent(`${config.username}:${config.password}`)))
+      const auth = btoa(
+        unescape(encodeURIComponent(`${config.username}:${config.password}`)),
+      )
       const baseUrl = config.url.replace(/\/$/, '')
       const res = await fetch(`${baseUrl}/books/`, {
         method: 'PROPFIND',
         headers: {
           Authorization: `Basic ${auth}`,
-          Depth: '0'
-        }
+          Depth: '0',
+        },
       })
       if (res.ok || res.status === 404 || res.status === 207) {
         alert(t('connection_successful'))
@@ -189,18 +186,25 @@ const Synchronization: React.FC = () => {
         <TextField
           name={t('username')}
           value={config.username}
-          onChange={(e: any) => setConfig({ ...config, username: e.target.value })}
+          onChange={(e: any) =>
+            setConfig({ ...config, username: e.target.value })
+          }
         />
         <TextField
           name={t('password')}
           type="password"
           value={config.password}
-          onChange={(e: any) => setConfig({ ...config, password: e.target.value })}
+          onChange={(e: any) =>
+            setConfig({ ...config, password: e.target.value })
+          }
         />
         <div className="mt-2 flex gap-3">
           <Button
             onClick={() => {
-              window.localStorage.setItem(WEB_DAV_CONFIG_KEY, JSON.stringify(config))
+              window.localStorage.setItem(
+                WEB_DAV_CONFIG_KEY,
+                JSON.stringify(config),
+              )
               window.location.reload()
             }}
           >
@@ -230,10 +234,13 @@ const Synchronization: React.FC = () => {
 interface PartProps {
   title: string
 }
-const Item: React.FC<React.PropsWithChildren<PartProps>> = ({ title, children }) => {
+const Item: React.FC<React.PropsWithChildren<PartProps>> = ({
+  title,
+  children,
+}) => {
   return (
     <div>
-      <h3 className="typescale-title-small text-on-surface-variant">{title}</h3>
+      <h3 className="text-on-surface-variant typescale-title-small">{title}</h3>
       <div className="mt-2">{children}</div>
     </div>
   )

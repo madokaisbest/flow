@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { debounce } from '@github/mini-throttle/decorators'
 import { IS_SERVER } from '@literal-ui/hooks'
 import React from 'react'
@@ -62,7 +63,10 @@ interface TimelineItem {
 }
 
 class BaseTab {
-  constructor(public readonly id: string, public readonly title = id) {}
+  constructor(
+    public readonly id: string,
+    public readonly title = id,
+  ) {}
 
   get isBook(): boolean {
     return this instanceof BookTab
@@ -370,7 +374,7 @@ export class BookTab extends BaseTab {
       this.location?.start.cfi ?? this.book.cfi ?? undefined,
     )
     this.rendition.themes.default(defaultStyle)
-    this.rendition.hooks.render.register((view: any) => {
+    this.rendition.hooks.render.register((_view: any) => {
       this.onRender?.()
     })
 

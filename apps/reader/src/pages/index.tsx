@@ -13,6 +13,7 @@ import {
 } from 'react-icons/md'
 import { useSet } from 'react-use'
 import { usePrevious } from 'react-use'
+import { v4 as uuidv4 } from 'uuid'
 
 import { ReaderGridView, Button, TextField, DropZone } from '../components'
 import { BookRecord, CoverRecord, db } from '../db'
@@ -29,7 +30,6 @@ import { reader, useReaderSnapshot } from '../models'
 import { lock } from '../styles'
 import { proxyRequest, pack, uploadData } from '../sync'
 import { copy, pLimit, generateBookCover, parseFilename } from '../utils'
-import { v4 as uuidv4 } from 'uuid'
 
 const placeholder = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><rect fill="gray" fill-opacity="0" width="1" height="1"/></svg>`
 
@@ -135,26 +135,39 @@ const Library: React.FC = () => {
 
   useEffect(() => {
     if (!previousRemoteBooks && remoteBooks) {
-      const validBooks = Array.isArray(remoteBooks) ? remoteBooks.filter((b: any) => b && b.id) : []
+      const validBooks = Array.isArray(remoteBooks)
+        ? remoteBooks.filter((b: any) => b && b.id)
+        : []
       if (validBooks.length > 0) {
-        db?.books.toArray().then((localBooks) => {
-          const mergedBooks = validBooks.map((rb: any) => {
-            const lb = localBooks.find((l) => l.id === rb.id)
-            if (lb) {
-              const latestUpdatedAt = Math.max(rb.updatedAt || 0, lb.updatedAt || 0)
-              const result = { ...lb, ...rb, updatedAt: latestUpdatedAt || lb.updatedAt || rb.updatedAt }
-              if (lb.status === 'local') {
-                result.status = 'local'
+        db?.books
+          .toArray()
+          .then((localBooks) => {
+            const mergedBooks = validBooks.map((rb: any) => {
+              const lb = localBooks.find((l) => l.id === rb.id)
+              if (lb) {
+                const latestUpdatedAt = Math.max(
+                  rb.updatedAt || 0,
+                  lb.updatedAt || 0,
+                )
+                const result = {
+                  ...lb,
+                  ...rb,
+                  updatedAt: latestUpdatedAt || lb.updatedAt || rb.updatedAt,
+                }
+                if (lb.status === 'local') {
+                  result.status = 'local'
+                }
+                return result
               }
-              return result
-            }
-            if (!rb.updatedAt) {
-              rb.updatedAt = rb.createdAt || Date.now()
-            }
-            return rb
+              if (!rb.updatedAt) {
+                rb.updatedAt = rb.createdAt || Date.now()
+              }
+              return rb
+            })
+            return db?.books.bulkPut(mergedBooks)
           })
-          return db?.books.bulkPut(mergedBooks)
-        }).then(() => setReadyToSync(true)).catch(console.error)
+          .then(() => setReadyToSync(true))
+          .catch(console.error)
       } else {
         setReadyToSync(true)
       }
@@ -168,63 +181,75 @@ const Library: React.FC = () => {
     db?.books.toArray().then(async (books) => {
       const limit = pLimit(3) // 限制并发数为 3
 
-      await Promise.all(remoteFiles.map(remoteFile => limit(async () => {
-        if (!remoteFile.name.endsWith('.epub')) return
+      await Promise.all(
+        remoteFiles.map((remoteFile) =>
+          limit(async () => {
+            if (!remoteFile.name.endsWith('.epub')) return
 
-        let book = books.find((b) => b.name === remoteFile.name)
-        if (!book) {
-          const { title, author } = parseFilename(remoteFile.name)
-          const bookId = uuidv4()
-          book = {
-            id: bookId,
-            name: remoteFile.name,
-            size: remoteFile.size || 0,
-            status: 'remote',
-            remotePath: `/books/${remoteFile.name}`,
-            metadata: { title, creator: author },
-            createdAt: new Date(remoteFile.lastmod).getTime() || Date.now(),
-            updatedAt: new Date(remoteFile.lastmod).getTime() || Date.now(),
-            definitions: [],
-            annotations: [],
-          } as any as BookRecord
+            let book = books.find((b) => b.name === remoteFile.name)
+            if (!book) {
+              const { title, author } = parseFilename(remoteFile.name)
+              const bookId = uuidv4()
+              book = {
+                id: bookId,
+                name: remoteFile.name,
+                size: remoteFile.size || 0,
+                status: 'remote',
+                remotePath: `/books/${remoteFile.name}`,
+                metadata: { title, creator: author },
+                createdAt: new Date(remoteFile.lastmod).getTime() || Date.now(),
+                updatedAt: new Date(remoteFile.lastmod).getTime() || Date.now(),
+                definitions: [],
+                annotations: [],
+              } as any as BookRecord
 
-          await db?.books.add(book)
+              await db?.books.add(book)
 
-          setLoading(bookId)
-          try {
-            const { title, author } = parseFilename(book.name)
-            const coverDataUrl = generateBookCover(book.metadata?.title || title, book.metadata?.creator || author)
-            if (coverDataUrl) {
-              await db?.covers.add({ id: bookId, cover: coverDataUrl })
-            }
-          } catch (e) { console.error('generate cover error', e) }
-          setLoading(undefined)
-        } else {
-          const file = await db?.files.get(book.id)
-          if (!file) {
-            if (book.status !== 'remote') {
-              book.status = 'remote'
-              book.remotePath = `/books/${remoteFile.name}`
-              await db?.books.put(book)
-            }
-            const cover = await db?.covers.get(book.id)
-            if (!cover?.cover) {
-              setLoading(book.id)
-              const { title, author } = parseFilename(book.name)
-              const coverDataUrl = generateBookCover(book.metadata?.title || title, book.metadata?.creator || author)
-              if (coverDataUrl) {
-                await db?.covers.put({ id: book.id, cover: coverDataUrl })
+              setLoading(bookId)
+              try {
+                const { title, author } = parseFilename(book.name)
+                const coverDataUrl = generateBookCover(
+                  book.metadata?.title || title,
+                  book.metadata?.creator || author,
+                )
+                if (coverDataUrl) {
+                  await db?.covers.add({ id: bookId, cover: coverDataUrl })
+                }
+              } catch (e) {
+                console.error('generate cover error', e)
               }
               setLoading(undefined)
+            } else {
+              const file = await db?.files.get(book.id)
+              if (!file) {
+                if (book.status !== 'remote') {
+                  book.status = 'remote'
+                  book.remotePath = `/books/${remoteFile.name}`
+                  await db?.books.put(book)
+                }
+                const cover = await db?.covers.get(book.id)
+                if (!cover?.cover) {
+                  setLoading(book.id)
+                  const { title, author } = parseFilename(book.name)
+                  const coverDataUrl = generateBookCover(
+                    book.metadata?.title || title,
+                    book.metadata?.creator || author,
+                  )
+                  if (coverDataUrl) {
+                    await db?.covers.put({ id: book.id, cover: coverDataUrl })
+                  }
+                  setLoading(undefined)
+                }
+              } else {
+                if (book.status === 'remote') {
+                  book.status = 'local'
+                  await db?.books.put(book)
+                }
+              }
             }
-          } else {
-            if (book.status === 'remote') {
-              book.status = 'local'
-              await db?.books.put(book)
-            }
-          }
-        }
-      })))
+          }),
+        ),
+      )
     })
   }, [readyToSync, remoteFiles])
 
@@ -240,11 +265,12 @@ const Library: React.FC = () => {
   )
 
   const displayedBooks = filterText
-    ? books.filter(b =>
-      b.name.toLowerCase().includes(filterText.toLowerCase()) ||
-      b.metadata?.title?.toLowerCase().includes(filterText.toLowerCase()) ||
-      b.metadata?.creator?.toLowerCase().includes(filterText.toLowerCase())
-    )
+    ? books.filter(
+        (b) =>
+          b.name.toLowerCase().includes(filterText.toLowerCase()) ||
+          b.metadata?.title?.toLowerCase().includes(filterText.toLowerCase()) ||
+          b.metadata?.creator?.toLowerCase().includes(filterText.toLowerCase()),
+      )
     : books
 
   const allSelected = selectedBookIds.size === displayedBooks.length
@@ -346,8 +372,10 @@ const Library: React.FC = () => {
                       setLoading(book.id)
                       try {
                         try {
-                          await proxyRequest('createDirectory', { path: '/books' })
-                        } catch { }
+                          await proxyRequest('createDirectory', {
+                            path: '/books',
+                          })
+                        } catch {}
 
                         const reader = new FileReader()
                         const base64Promise = new Promise<string>((resolve) => {
@@ -393,7 +421,10 @@ const Library: React.FC = () => {
                           path: `/books/${book.name}`,
                           format: 'binary',
                         })
-                        await addFile(book.id, new File([contents as ArrayBuffer], book.name))
+                        await addFile(
+                          book.id,
+                          new File([contents as ArrayBuffer], book.name),
+                        )
                         book.status = 'local'
                         await db?.books.put(book)
                       } catch (err) {
@@ -420,8 +451,10 @@ const Library: React.FC = () => {
                       async (data) => {
                         for (const b of selectedBooks) {
                           try {
-                            await proxyRequest('deleteFile', { path: `/books/${b.name}` })
-                          } catch { }
+                            await proxyRequest('deleteFile', {
+                              path: `/books/${b.name}`,
+                            })
+                          } catch {}
                         }
                         return data?.filter(
                           (f) => !selectedBooks.find((b) => b.name === f.name),
@@ -490,21 +523,32 @@ const Library: React.FC = () => {
                   await db?.books.put(bookToOpen)
 
                   // 1. Sync the latest remote metadata/progress first
-                  const latestRemoteBooks = await mutateRemoteBooks(undefined, { revalidate: true })
-                  const remoteData = latestRemoteBooks?.find(b => b && b.name === bookToOpen.name)
+                  const latestRemoteBooks = await mutateRemoteBooks(undefined, {
+                    revalidate: true,
+                  })
+                  const remoteData = latestRemoteBooks?.find(
+                    (b) => b && b.name === bookToOpen.name,
+                  )
                   if (remoteData) {
                     bookToOpen.cfi = remoteData.cfi
                     bookToOpen.percentage = remoteData.percentage
                     bookToOpen.annotations = remoteData.annotations || []
                     bookToOpen.definitions = remoteData.definitions || []
-                    if (remoteData.configuration) bookToOpen.configuration = remoteData.configuration
-                    
+                    if (remoteData.configuration)
+                      bookToOpen.configuration = remoteData.configuration
+
                     // Keep the latest updatedAt
-                    bookToOpen.updatedAt = Math.max(bookToOpen.updatedAt || 0, remoteData.updatedAt || 0)
+                    bookToOpen.updatedAt = Math.max(
+                      bookToOpen.updatedAt || 0,
+                      remoteData.updatedAt || 0,
+                    )
                     await db?.books.put(bookToOpen)
-                    
+
                     // Sync back to remote if local is newer (or just to be safe)
-                    db?.books.toArray().then(books => uploadData(books)).catch(() => {})
+                    db?.books
+                      .toArray()
+                      .then((books) => uploadData(books))
+                      .catch(() => {})
                   }
 
                   // 2. Download the epub if the status is remote
@@ -513,7 +557,10 @@ const Library: React.FC = () => {
                       path: `/books/${bookToOpen.name}`,
                       format: 'binary',
                     })
-                    await addFile(bookToOpen.id, new File([contents as ArrayBuffer], bookToOpen.name))
+                    await addFile(
+                      bookToOpen.id,
+                      new File([contents as ArrayBuffer], bookToOpen.name),
+                    )
                     bookToOpen.status = 'local'
                     await db?.books.put(bookToOpen)
                   }
@@ -567,7 +614,7 @@ const Book: React.FC<BookProps> = ({
     <div className="relative flex flex-col">
       <div
         role="button"
-        className="border-inverse-on-surface relative border"
+        className="relative border border-inverse-on-surface"
         onClick={async () => {
           if (select) {
             toggle(book.id)
@@ -589,7 +636,7 @@ const Book: React.FC<BookProps> = ({
           )}
         />
         {book.percentage !== undefined && (
-          <div className="typescale-body-large absolute right-0 bg-gray-500/60 px-2 text-gray-100">
+          <div className="absolute right-0 bg-gray-500/60 px-2 text-gray-100 typescale-body-large">
             {(book.percentage * 100).toFixed()}%
           </div>
         )}
@@ -601,7 +648,10 @@ const Book: React.FC<BookProps> = ({
         />
         {book.status === 'remote' && !loading && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-            <MdOutlineFileDownload className="text-white drop-shadow-lg" size={48} />
+            <MdOutlineFileDownload
+              className="text-white drop-shadow-lg"
+              size={48}
+            />
           </div>
         )}
         {select && (
@@ -618,12 +668,12 @@ const Book: React.FC<BookProps> = ({
       </div>
 
       <div
-        className="line-clamp-3 text-on-surface-variant typescale-body-small lg:typescale-body-medium mt-2 w-full"
+        className="mt-2 line-clamp-3 w-full text-on-surface-variant typescale-body-small lg:typescale-body-medium"
         title={book.name}
       >
         <MdCheckCircle
           className={clsx(
-            'mr-1 mb-0.5 inline',
+            'mb-0.5 mr-1 inline',
             remoteFile ? 'text-tertiary' : 'text-surface-variant',
           )}
           size={16}
