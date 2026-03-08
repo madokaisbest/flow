@@ -1,6 +1,6 @@
-import { Link } from '@literal-ui/next'
 import clsx from 'clsx'
 import useTranslation from 'next-translate/useTranslation'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ComponentProps } from 'react'
 import { RiGithubFill } from 'react-icons/ri'
