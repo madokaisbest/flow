@@ -124,8 +124,8 @@ importers:
         specifier: 4.3.0
         version: 4.3.0
       dexie-react-hooks:
-        specifier: 1.1.1
-        version: 1.1.1(@types/react@18.3.28)(dexie@4.3.0)(react@18.3.1)
+        specifier: 4.2.0
+        version: 4.2.0(@types/react@18.3.28)(dexie@4.3.0)(react@18.3.1)
       file-saver:
         specifier: 2.0.5
         version: 2.0.5
@@ -3869,11 +3869,11 @@ packages:
   devlop@1.1.0:
     resolution: {integrity: sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA==}
 
-  dexie-react-hooks@1.1.1:
-    resolution: {integrity: sha512-Cam5JP6PxHN564RvWEoe8cqLhosW0O4CAZ9XEVYeGHJBa6KEJlOpd9CUpV3kmU9dm2MrW97/lk7qkf1xpij7gA==}
+  dexie-react-hooks@4.2.0:
+    resolution: {integrity: sha512-u7KqTX9JpBQK8+tEyA9X0yMGXlSCsbm5AU64N6gjvGk/IutYDpLBInMYEAEC83s3qhIvryFS+W+sqLZUBEvePQ==}
     peerDependencies:
       '@types/react': ^18.3.28
-      dexie: '>=3.1.0-alpha.1 <5.0.0'
+      dexie: '>=4.2.0-alpha.1 <5.0.0'
       react: '>=16'
 
   dexie@4.3.0:
@@ -12231,7 +12231,7 @@ snapshots:
     dependencies:
       dequal: 2.0.3
 
-  dexie-react-hooks@1.1.1(@types/react@18.3.28)(dexie@4.3.0)(react@18.3.1):
+  dexie-react-hooks@4.2.0(@types/react@18.3.28)(dexie@4.3.0)(react@18.3.1):
     dependencies:
       '@types/react': 18.3.28
       dexie: 4.3.0

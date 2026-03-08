@@ -23,7 +23,7 @@
     "clsx": "1.1.1",
     "dayjs": "1.11.2",
     "dexie": "4.3.0",
-    "dexie-react-hooks": "1.1.1",
+    "dexie-react-hooks": "4.2.0",
     "file-saver": "2.0.5",
     "jszip": "3.10.1",
     "next": "15.5.10",
