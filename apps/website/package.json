@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@flow/internal": "workspace:*",
-    "@literal-ui/core": "0.0.13",
+    "@literal-ui/core": "0.0.14",
     "@literal-ui/hooks": "0.0.8",
     "@literal-ui/next": "0.0.4",
     "@mdx-js/loader": "2.1.1",
