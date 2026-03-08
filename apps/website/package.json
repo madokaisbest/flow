@@ -40,7 +40,7 @@
     "m3-tokens": "0.0.3",
     "next-transpile-modules": "9.0.0",
     "postcss": "8.4.31",
-    "tailwindcss": "4.2.1",
+    "tailwindcss": "^3.4.17",
     "type-fest": "5.4.4"
   },
   "engines": {
