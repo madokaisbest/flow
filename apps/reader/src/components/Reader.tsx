@@ -130,7 +130,7 @@ function ReaderGroup({ index }: ReaderGroupProps) {
       </Tab.List>
 
       <DropZone
-        className={clsx('flex-1 min-h-0', isTouchScreen || 'h-0')}
+        className={clsx('min-h-0 flex-1', isTouchScreen || 'h-0')}
         split
         onDrop={async (e, position) => {
           // read `e.dataTransfer` first to avoid get empty value after `await`
@@ -195,7 +195,10 @@ function ReaderGroup({ index }: ReaderGroupProps) {
 interface PaneContainerProps {
   active: boolean
 }
-const PaneContainer: React.FC<React.PropsWithChildren<PaneContainerProps>> = ({ active, children }) => {
+const PaneContainer: React.FC<React.PropsWithChildren<PaneContainerProps>> = ({
+  active,
+  children,
+}) => {
   return <div className={clsx('h-full', active || 'hidden')}>{children}</div>
 }
 
@@ -316,16 +319,27 @@ function BookPane({ tab, onMouseDown }: BookPaneProps) {
       }
 
       const w = container.clientWidth
+      const h = container.clientHeight
       const x = e.clientX % w
-      const threshold = 0.3
-      const side = w * threshold
+      const y = e.clientY % h
 
-      if (x < side) {
+      const isLeft = x < w * 0.3
+      const isRight = x > w * 0.7
+      const isTop = y < h * 0.2
+      const isBottom = y > h * 0.8
+
+      const isCenter = !isLeft && !isRight && !isTop && !isBottom
+
+      if (isCenter) {
+        if (mobile) setNavbar((a) => !a)
+      } else if (isLeft) {
         tab.prev()
-      } else if (w - x < side) {
+      } else if (isRight) {
         tab.next()
-      } else if (mobile) {
-        setNavbar((a) => !a)
+      } else if (isTop) {
+        tab.prev()
+      } else if (isBottom) {
+        tab.next()
       }
     }
   })
@@ -436,7 +450,7 @@ const ReaderPaneHeader: React.FC<ReaderPaneHeaderProps> = ({ tab }) => {
         {navPath.map((item, i) => (
           <button
             key={i}
-            className="hover:text-on-surface flex shrink-0 items-center"
+            className="flex shrink-0 items-center hover:text-on-surface"
           >
             {item.label}
             {i !== navPath.length - 1 && <MdChevronRight size={20} />}
@@ -489,12 +503,16 @@ const ReaderPaneFooter: React.FC<FooterProps> = ({ tab }) => {
   )
 }
 
-interface LineProps extends ComponentProps<'div'> { }
-const Bar: React.FC<React.PropsWithChildren<LineProps>> = ({ className, children, ...props }) => {
+interface LineProps extends ComponentProps<'div'> {}
+const Bar: React.FC<React.PropsWithChildren<LineProps>> = ({
+  className,
+  children,
+  ...props
+}) => {
   return (
     <div
       className={clsx(
-        'typescale-body-small text-outline flex h-6 items-center justify-between gap-2 px-[4vw] sm:px-2',
+        'flex h-6 items-center justify-between gap-2 px-[4vw] text-outline typescale-body-small sm:px-2',
         className,
       )}
       {...props}
