@@ -7,7 +7,7 @@ import { RiGithubFill } from 'react-icons/ri'
 
 import { localeMap } from '../../i18n'
 
-export const Layout: React.FC = ({ children }) => {
+export const Layout: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
@@ -81,7 +81,7 @@ const Header: React.FC = () => {
 
         <div className="text-on-surface-variant ml-auto flex gap-3">
           <Link href="https://github.com/pacexy/flow">
-            <RiGithubFill size={22} />
+            {(RiGithubFill as any)({ size: 22 })}
           </Link>
           <select
             className="bg-transparent outline-none"

@@ -13,7 +13,7 @@ interface DropZoneProps {
   onDrop?: (e: DragEvent<HTMLDivElement>, position?: Position) => void
   split?: boolean
 }
-export const DropZone: React.FC<DropZoneProps> = (props) => {
+export const DropZone: React.FC<React.PropsWithChildren<DropZoneProps>> = (props) => {
   return (
     <DndProvider>
       <DropZoneInner {...props} />
@@ -30,8 +30,7 @@ function accept(e?: DragEvent) {
   return !!dt?.types.every((t) => ['text/plain', 'Files'].includes(t))
 }
 
-const DropZoneInner: React.FC<DropZoneProps> = ({
-  children,
+const DropZoneInner: React.FC<React.PropsWithChildren<DropZoneProps>> = ({ children,
   className,
   onDrop,
   split = false,
@@ -126,7 +125,7 @@ const DndContext = createContext<{
   dragover: boolean
   setDragEvent: (e?: DragEvent) => void
 }>({ dragover: false, setDragEvent: () => {} })
-const DndProvider: React.FC = ({ children }) => {
+const DndProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const [dragover, setDragover] = useState(false)
 
   const setDragEvent = useCallback((e?: DragEvent) => {

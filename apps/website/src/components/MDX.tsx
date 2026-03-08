@@ -33,12 +33,13 @@ export function H2({ className, ...props }: HeadingProps) {
 
 type Meta = { title?: string }
 export function withLayout({ title }: Meta) {
-  return function Layout({ children }) {
+  return function Layout({ children }: React.PropsWithChildren<unknown>) {
     return (
       <>
         <Seo title={title} />
         <article className="container py-16">{children}</article>
       </>
     )
-  } as React.FC
+  }
+
 }

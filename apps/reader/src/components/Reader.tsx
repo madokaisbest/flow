@@ -65,14 +65,14 @@ function handleKeyDown(tab?: BookTab) {
 }
 
 export function ReaderGridView() {
-  const { groups } = useReaderSnapshot()
+  const { groups } = useReaderSnapshot() as any
 
   useEventListener('keydown', handleKeyDown(reader.focusedBookTab))
 
   if (!groups.length) return null
   return (
     <SplitView className={clsx('ReaderGridView')}>
-      {groups.map(({ id }, i) => (
+      {(groups as any).map(({ id }: any, i: number) => (
         <ReaderGroup key={id} index={i} />
       ))}
     </SplitView>
@@ -84,8 +84,8 @@ interface ReaderGroupProps {
 }
 function ReaderGroup({ index }: ReaderGroupProps) {
   const group = reader.groups[index]!
-  const { focusedIndex } = useReaderSnapshot()
-  const { tabs, selectedIndex } = useSnapshot(group)
+  const { focusedIndex } = useReaderSnapshot() as any
+  const { tabs, selectedIndex } = useSnapshot(group) as any
   const t = useTranslation()
 
   const { size } = useSplitViewItem(`${ReaderGroup.name}.${index}`, {
@@ -107,7 +107,7 @@ function ReaderGroup({ index }: ReaderGroupProps) {
         className="hidden sm:flex"
         onDelete={() => reader.removeGroup(index)}
       >
-        {tabs.map((tab, i) => {
+        {(tabs as any).map((tab: any, i: number) => {
           const selected = i === selectedIndex
           const focused = index === focusedIndex && selected
           return (
@@ -178,7 +178,7 @@ function ReaderGroup({ index }: ReaderGroupProps) {
           }
         }}
       >
-        {group.tabs.map((tab, i) => (
+        {(group.tabs as any).map((tab: any, i: number) => (
           <PaneContainer active={i === selectedIndex} key={tab.id}>
             {tab instanceof BookTab ? (
               <BookPane tab={tab} onMouseDown={handleMouseDown} />
@@ -195,7 +195,7 @@ function ReaderGroup({ index }: ReaderGroupProps) {
 interface PaneContainerProps {
   active: boolean
 }
-const PaneContainer: React.FC<PaneContainerProps> = ({ active, children }) => {
+const PaneContainer: React.FC<React.PropsWithChildren<PaneContainerProps>> = ({ active, children }) => {
   return <div className={clsx('h-full', active || 'hidden')}>{children}</div>
 }
 
@@ -211,7 +211,7 @@ function BookPane({ tab, onMouseDown }: BookPaneProps) {
   const { dark } = useColorScheme()
   const [background] = useBackground()
 
-  const { iframe, rendition, rendered, container } = useSnapshot(tab)
+  const { iframe, rendition, rendered, container } = useSnapshot(tab) as any
 
   useTilg()
 
@@ -423,7 +423,7 @@ interface ReaderPaneHeaderProps {
   tab: BookTab
 }
 const ReaderPaneHeader: React.FC<ReaderPaneHeaderProps> = ({ tab }) => {
-  const { location } = useSnapshot(tab)
+  const { location } = useSnapshot(tab) as any
   const navPath = tab.getNavPath()
 
   useEffect(() => {
@@ -456,7 +456,7 @@ interface FooterProps {
   tab: BookTab
 }
 const ReaderPaneFooter: React.FC<FooterProps> = ({ tab }) => {
-  const { locationToReturn, location, book } = useSnapshot(tab)
+  const { locationToReturn, location, book } = useSnapshot(tab) as any
 
   return (
     <Bar>
@@ -490,7 +490,7 @@ const ReaderPaneFooter: React.FC<FooterProps> = ({ tab }) => {
 }
 
 interface LineProps extends ComponentProps<'div'> { }
-const Bar: React.FC<LineProps> = ({ className, ...props }) => {
+const Bar: React.FC<React.PropsWithChildren<LineProps>> = ({ className, children, ...props }) => {
   return (
     <div
       className={clsx(
@@ -498,6 +498,8 @@ const Bar: React.FC<LineProps> = ({ className, ...props }) => {
         className,
       )}
       {...props}
-    ></div>
+    >
+      {children}
+    </div>
   )
 }

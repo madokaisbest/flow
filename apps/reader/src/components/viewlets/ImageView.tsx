@@ -6,8 +6,8 @@ import { Row } from '../Row'
 import { PaneView, PaneViewProps } from '../base'
 
 export const ImageView: React.FC<PaneViewProps> = (props) => {
-  const { focusedBookTab } = useReaderSnapshot()
-  const sections = focusedBookTab?.sections?.filter((s) => s.images.length) as
+  const { focusedBookTab } = useReaderSnapshot() as any
+  const sections = focusedBookTab?.sections?.filter((s: any) => s.images.length) as
     | ISection[]
     | undefined
 

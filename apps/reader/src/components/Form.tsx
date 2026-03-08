@@ -8,6 +8,7 @@ import {
 } from 'react'
 import { IconType } from 'react-icons'
 import { MdCheck, MdClose } from 'react-icons/md'
+// @ts-ignore
 import { PolymorphicPropsWithoutRef } from 'react-polymorphic-types'
 
 import { useMobile, useTranslation } from '../hooks'
@@ -92,7 +93,7 @@ export function TextField<T extends ElementType = 'input'>({
         {datalist && <datalist id={datalistId}>{datalist}</datalist>}
         {!!actions.length && (
           <div className="mx-1 flex gap-0.5">
-            {actions.map(({ onClick, ...a }) => (
+            {actions.map(({ onClick, ...a }: Action) => (
               <IconButton
                 className="text-outline !p-px"
                 key={a.title}

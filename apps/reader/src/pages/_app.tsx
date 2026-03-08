@@ -15,9 +15,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   if (router.pathname === '/success') return <Component {...pageProps} />
 
   return (
-    <ErrorBoundary fallback={<Fallback />}>
-      <LiteralProvider>
-        <RecoilRoot>
+    <ErrorBoundary fallback={<Fallback />} {...({} as any)}>
+      <LiteralProvider {...({} as any)}>
+        <RecoilRoot {...({} as any)}>
           <Theme />
           <Layout>
             <Component {...pageProps} />
@@ -28,6 +28,6 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   )
 }
 
-const Fallback: React.FC = () => {
+const Fallback: React.FC<React.PropsWithChildren<unknown>> = () => {
   return <div>Something went wrong.</div>
 }

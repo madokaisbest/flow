@@ -13,8 +13,8 @@ const components = {
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <LiteralProvider>
-      <MDXProvider components={components}>
+    <LiteralProvider {...({} as any)}>
+      <MDXProvider components={components} {...({} as any)}>
         <Layout>
           <Component {...pageProps} />
         </Layout>

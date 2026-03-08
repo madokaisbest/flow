@@ -2,8 +2,6 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 })
 const nextTranslate = require('next-translate')
-const withTM = require('next-transpile-modules')(['@flow/internal'])
-
 /**
  * @type {import('rehype-pretty-code').Options}
  **/
@@ -13,8 +11,6 @@ const opts = {
     light: 'github-light',
   },
   onVisitLine(node) {
-    // Prevent lines from collapsing in `display: grid` mode, and
-    // allow empty lines to be copy/pasted
     if (node.children.length === 0) {
       node.children = [{ type: 'text', value: ' ' }]
     }
@@ -27,24 +23,19 @@ const opts = {
   },
 }
 
-/**
- * @type {import('next').NextConfig}
- **/
 const config = {
+  transpilePackages: ['@flow/internal'],
   pageExtensions: ['ts', 'tsx', 'mdx'],
-  pwa: {
-    dest: 'public',
-  },
   webpack: (config, options) => {
     config.module.rules.push({
-      test: /.mdx?$/, // load both .md and .mdx files
+      test: /\.mdx?$/, // load both .md and .mdx files
       use: [
         options.defaultLoaders.babel,
         {
           loader: '@mdx-js/loader',
           options: {
             remarkPlugins: [],
-            rehypePlugins: [[require('rehype-pretty-code'), opts]],
+            rehypePlugins: [[require('rehype-pretty-code').default, opts]],
             // If you use `MDXProvider`, uncomment the following line.
             providerImportSource: '@mdx-js/react',
           },
@@ -57,4 +48,4 @@ const config = {
   },
 }
 
-module.exports = nextTranslate(withTM(withBundleAnalyzer(config)))
+module.exports = nextTranslate(withBundleAnalyzer(config))
