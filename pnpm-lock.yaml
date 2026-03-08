@@ -313,8 +313,8 @@ importers:
         version: 4.0.1
     devDependencies:
       '@literal-ui/plugins':
-        specifier: 0.0.3
-        version: 0.0.3(tailwindcss@3.2.0(postcss@8.4.31))
+        specifier: 0.0.4
+        version: 0.0.4(tailwindcss@3.2.0(postcss@8.4.31))
       '@tailwindcss/aspect-ratio':
         specifier: 0.4.2
         version: 0.4.2(tailwindcss@3.2.0(postcss@8.4.31))
@@ -1828,8 +1828,8 @@ packages:
       next: '>=12.0.0'
       react: '>=16.9.0'
 
-  '@literal-ui/plugins@0.0.3':
-    resolution: {integrity: sha512-NxSGQAmcPi7wWQgaNKOZhGZxNWkrjOeJGlWnBRCDw3c446lUzowD9LLJueaIyB/l/ebZrw/7nw+sa6FfyxDBpg==}
+  '@literal-ui/plugins@0.0.4':
+    resolution: {integrity: sha512-3X3PS2MxyQVbfTEf46bMcPwVulKE2nyXCCq/pIdQcM4AEpD1gG9oHB5nVbc7XgsqeYJvJNT9FiDIxbk6m59uzg==}
     peerDependencies:
       tailwindcss: '>=3.0.0'
 
@@ -10015,7 +10015,7 @@ snapshots:
       react: 18.3.1
       type-fest: 2.19.0
 
-  '@literal-ui/plugins@0.0.3(tailwindcss@3.2.0(postcss@8.4.31))':
+  '@literal-ui/plugins@0.0.4(tailwindcss@3.2.0(postcss@8.4.31))':
     dependencies:
       tailwindcss: 3.2.0(postcss@8.4.31)
 
