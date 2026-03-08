@@ -82,7 +82,7 @@ importers:
         version: 2.1.0
       '@literal-ui/core':
         specifier: 0.0.13
-        version: 0.0.13(react-dom@18.0.0(react@18.0.0))(react-icons@4.3.1(react@18.0.0))(react@18.0.0)
+        version: 0.0.13(react-dom@18.0.0(react@18.0.0))(react-icons@5.6.0(react@18.0.0))(react@18.0.0)
       '@literal-ui/hooks':
         specifier: 0.0.8
         version: 0.0.8(react-dom@18.0.0(react@18.0.0))(react@18.0.0)
@@ -144,8 +144,8 @@ importers:
         specifier: 0.18.0
         version: 0.18.0(react@18.0.0)
       react-icons:
-        specifier: 4.3.1
-        version: 4.3.1(react@18.0.0)
+        specifier: 5.6.0
+        version: 5.6.0(react@18.0.0)
       react-photo-view:
         specifier: 1.1.2
         version: 1.1.2(react-dom@18.0.0(react@18.0.0))(react@18.0.0)
@@ -233,7 +233,7 @@ importers:
         version: link:../../packages/internal
       '@literal-ui/core':
         specifier: 0.0.13
-        version: 0.0.13(react-dom@18.0.0(react@18.0.0))(react-icons@4.3.1(react@18.0.0))(react@18.0.0)
+        version: 0.0.13(react-dom@18.0.0(react@18.0.0))(react-icons@5.6.0(react@18.0.0))(react@18.0.0)
       '@literal-ui/hooks':
         specifier: 0.0.8
         version: 0.0.8(react-dom@18.0.0(react@18.0.0))(react@18.0.0)
@@ -274,8 +274,8 @@ importers:
         specifier: 18.0.0
         version: 18.0.0(react@18.0.0)
       react-icons:
-        specifier: 4.3.1
-        version: 4.3.1(react@18.0.0)
+        specifier: 5.6.0
+        version: 5.6.0(react@18.0.0)
       react-use:
         specifier: 17.4.0
         version: 17.4.0(react-dom@18.0.0(react@18.0.0))(react@18.0.0)
@@ -7107,8 +7107,8 @@ packages:
     peerDependencies:
       react: ^0.14.0 || ^15.0.0 || ^16.0.0-0 || ^17.0.0-0 || ^18.0.0-0
 
-  react-icons@4.3.1:
-    resolution: {integrity: sha512-cB10MXLTs3gVuXimblAdI71jrJx8njrJZmNMEMC+sQu5B/BIOmlsAjskdqpn81y8UBVEGuHODd7/ci5DvoSzTQ==}
+  react-icons@5.6.0:
+    resolution: {integrity: sha512-RH93p5ki6LfOiIt0UtDyNg/cee+HLVR6cHHtW3wALfo+eOHTp8RnU2kRkI6E+H19zMIs03DyxUG/GfZMOGvmiA==}
     peerDependencies:
       react: '*'
 
@@ -10439,12 +10439,12 @@ snapshots:
 
   '@leichtgewicht/ip-codec@2.0.5': {}
 
-  '@literal-ui/core@0.0.13(react-dom@18.0.0(react@18.0.0))(react-icons@4.3.1(react@18.0.0))(react@18.0.0)':
+  '@literal-ui/core@0.0.13(react-dom@18.0.0(react@18.0.0))(react-icons@5.6.0(react@18.0.0))(react@18.0.0)':
     dependencies:
       '@literal-ui/hooks': 0.0.8(react-dom@18.0.0(react@18.0.0))(react@18.0.0)
       clsx: 1.1.1
       react: 18.0.0
-      react-icons: 4.3.1(react@18.0.0)
+      react-icons: 5.6.0(react@18.0.0)
       type-fest: 2.12.2
     transitivePeerDependencies:
       - react-dom
@@ -16804,7 +16804,7 @@ snapshots:
       prop-types: 15.8.1
       react: 18.0.0
 
-  react-icons@4.3.1(react@18.0.0):
+  react-icons@5.6.0(react@18.0.0):
     dependencies:
       react: 18.0.0
 
