@@ -12,7 +12,7 @@
     "@flow/epubjs": "workspace:*",
     "@flow/internal": "workspace:*",
     "@github/mini-throttle": "2.1.1",
-    "@literal-ui/core": "0.0.13",
+    "@literal-ui/core": "0.0.14",
     "@literal-ui/hooks": "0.0.8",
     "@literal-ui/next": "0.0.4",
     "@material/material-color-utilities": "0.4.0",

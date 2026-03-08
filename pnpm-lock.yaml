@@ -91,8 +91,8 @@ importers:
         specifier: 2.1.1
         version: 2.1.1
       '@literal-ui/core':
-        specifier: 0.0.13
-        version: 0.0.13(react-dom@18.3.1(react@18.3.1))(react-icons@5.6.0(react@18.3.1))(react@18.3.1)
+        specifier: 0.0.14
+        version: 0.0.14(react-dom@18.3.1(react@18.3.1))(react-icons@5.6.0(react@18.3.1))(react@18.3.1)
       '@literal-ui/hooks':
         specifier: 0.0.8
         version: 0.0.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -258,8 +258,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/internal
       '@literal-ui/core':
-        specifier: 0.0.13
-        version: 0.0.13(react-dom@18.3.1(react@18.3.1))(react-icons@5.6.0(react@18.3.1))(react@18.3.1)
+        specifier: 0.0.14
+        version: 0.0.14(react-dom@18.3.1(react@18.3.1))(react-icons@5.6.0(react@18.3.1))(react@18.3.1)
       '@literal-ui/hooks':
         specifier: 0.0.8
         version: 0.0.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1806,14 +1806,19 @@ packages:
   '@leichtgewicht/ip-codec@2.0.5':
     resolution: {integrity: sha512-Vo+PSpZG2/fmgmiNzYK9qWRh8h/CHrwD0mo1h1DzL4yzHNSfWYujGTYsWGreD000gcgmZ7K4Ys6Tx9TxtsKdDw==}
 
-  '@literal-ui/core@0.0.13':
-    resolution: {integrity: sha512-WJtAFCpI4CBGbFLH1BXtzt1yzPlSha8SjLsFxAmoJOs0A/2pjKTHrcUHOnd+tye6hi8ifWIvMTmxwaAfEfsuXg==}
+  '@literal-ui/core@0.0.14':
+    resolution: {integrity: sha512-gDLrZ+Lv6j+xZ90WkzKLV1+dmPNNY2sqaFsgzc7v7wEu7ktkKQTG56KqDGUPUzJpOEp04UwTd5pFGyS73aylbg==}
     peerDependencies:
       react: '>=16.9.0'
       react-icons: '>=4.1.0'
 
   '@literal-ui/hooks@0.0.8':
     resolution: {integrity: sha512-lyaQ+3TjnyWo5v1XVm/yTVTa5G/AObOB1UY4xa4zSG91aPaTyGH3W/XU6KKt6EBmNqLk/4riF8DtkBjiEDrZsg==}
+    peerDependencies:
+      react: '>=16.9.0'
+
+  '@literal-ui/hooks@0.0.9':
+    resolution: {integrity: sha512-eAIyasEV2Raw7BxXk82twLiXKK/o8uqP9TQ3lusw48dqT29tkh8LLtDHGifbjLh+LIEImjJ0HLnTex0GeVaaIQ==}
     peerDependencies:
       react: '>=16.9.0'
 
@@ -7942,10 +7947,6 @@ packages:
     resolution: {integrity: sha512-Ne2YiiGN8bmrmJJEuTWTLJR32nh/JdL1+PSicowtNb0WFpn59GK8/lfD61bVtzguz7b3PBt74nxpv/Pw5po5Rg==}
     engines: {node: '>=8'}
 
-  type-fest@2.12.2:
-    resolution: {integrity: sha512-qt6ylCGpLjZ7AaODxbpyBZSs9fCI9SkL3Z9q2oxMBQhs/uyY+VD8jHA8ULCGmWQJlBgqvO3EJeAngOHD8zQCrQ==}
-    engines: {node: '>=12.20'}
-
   type-fest@2.19.0:
     resolution: {integrity: sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==}
     engines: {node: '>=12.20'}
@@ -8148,6 +8149,13 @@ packages:
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
+
+  use-local-storage-state@18.3.3:
+    resolution: {integrity: sha512-SwwW6LPbxf3q5XimJyYE2jBefpvEJTjAgBO47wCs0+ZkL/Hx8heF/0wtBJ7Df0SiSwyfNDIPHo+8Z3q569jlow==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
 
   use-local-storage-state@19.5.0:
     resolution: {integrity: sha512-sUJAyFvsmqMpBhdwaRr7GTKkkoxb6PWeNVvpBDrLuwQF1PpbJRKIbOYeLLeqJI7B3wdfFlLLCBbmOdopiSTBOw==}
@@ -9977,13 +9985,13 @@ snapshots:
 
   '@leichtgewicht/ip-codec@2.0.5': {}
 
-  '@literal-ui/core@0.0.13(react-dom@18.3.1(react@18.3.1))(react-icons@5.6.0(react@18.3.1))(react@18.3.1)':
+  '@literal-ui/core@0.0.14(react-dom@18.3.1(react@18.3.1))(react-icons@5.6.0(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@literal-ui/hooks': 0.0.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@literal-ui/hooks': 0.0.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       clsx: 1.1.1
       react: 18.3.1
       react-icons: 5.6.0(react@18.3.1)
-      type-fest: 2.12.2
+      type-fest: 2.19.0
     transitivePeerDependencies:
       - react-dom
 
@@ -9991,6 +9999,13 @@ snapshots:
     dependencies:
       react: 18.3.1
       use-local-storage-state: 16.0.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+    transitivePeerDependencies:
+      - react-dom
+
+  '@literal-ui/hooks@0.0.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
+      use-local-storage-state: 18.3.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     transitivePeerDependencies:
       - react-dom
 
@@ -15979,14 +15994,14 @@ snapshots:
     dependencies:
       find-up: 6.3.0
       read-pkg: 7.1.0
-      type-fest: 2.12.2
+      type-fest: 2.19.0
 
   read-pkg@7.1.0:
     dependencies:
       '@types/normalize-package-data': 2.4.4
       normalize-package-data: 3.0.3
       parse-json: 5.2.0
-      type-fest: 2.12.2
+      type-fest: 2.19.0
 
   read-yaml-file@1.1.0:
     dependencies:
@@ -17323,8 +17338,6 @@ snapshots:
 
   type-fest@0.7.1: {}
 
-  type-fest@2.12.2: {}
-
   type-fest@2.19.0: {}
 
   type-fest@5.4.4:
@@ -17550,6 +17563,11 @@ snapshots:
       '@types/react': 18.3.28
 
   use-local-storage-state@16.0.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
+  use-local-storage-state@18.3.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
