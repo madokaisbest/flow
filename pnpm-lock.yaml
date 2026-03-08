@@ -87,8 +87,8 @@ importers:
         specifier: 0.0.8
         version: 0.0.8(react-dom@18.0.0(react@18.0.0))(react@18.0.0)
       '@literal-ui/next':
-        specifier: 0.0.3
-        version: 0.0.3(next@15.5.10(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(react-dom@18.0.0(react@18.0.0))(react@18.0.0))(react@18.0.0)
+        specifier: 0.0.4
+        version: 0.0.4(next@15.5.10(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(react-dom@18.0.0(react@18.0.0))(react@18.0.0))(react@18.0.0)
       '@material/material-color-utilities':
         specifier: 0.4.0
         version: 0.4.0
@@ -238,8 +238,8 @@ importers:
         specifier: 0.0.8
         version: 0.0.8(react-dom@18.0.0(react@18.0.0))(react@18.0.0)
       '@literal-ui/next':
-        specifier: 0.0.3
-        version: 0.0.3(next@15.5.10(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(react-dom@18.0.0(react@18.0.0))(react@18.0.0))(react@18.0.0)
+        specifier: 0.0.4
+        version: 0.0.4(next@15.5.10(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(react-dom@18.0.0(react@18.0.0))(react@18.0.0))(react@18.0.0)
       '@mdx-js/loader':
         specifier: 2.1.1
         version: 2.1.1(webpack@5.105.4(esbuild@0.27.3))
@@ -1696,8 +1696,8 @@ packages:
     peerDependencies:
       react: '>=16.9.0'
 
-  '@literal-ui/next@0.0.3':
-    resolution: {integrity: sha512-aKxmWz9kTTObf7dL5aij020B+WlkEKB0reCJK3I+NxUvSaxkjXnOB4BScrkrn8oUCmsycLRo/A6nQRioQvtGeA==}
+  '@literal-ui/next@0.0.4':
+    resolution: {integrity: sha512-nbyxeGQm4/MS348Cna3odFLsBEAqr9F+jJb5GadjrBpgyrkbIzcC1lWafSuFofUSLp0VtHtn2OSeo47c0LFECQ==}
     peerDependencies:
       next: '>=12.0.0'
       react: '>=16.9.0'
@@ -7750,6 +7750,10 @@ packages:
     resolution: {integrity: sha512-qt6ylCGpLjZ7AaODxbpyBZSs9fCI9SkL3Z9q2oxMBQhs/uyY+VD8jHA8ULCGmWQJlBgqvO3EJeAngOHD8zQCrQ==}
     engines: {node: '>=12.20'}
 
+  type-fest@2.19.0:
+    resolution: {integrity: sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==}
+    engines: {node: '>=12.20'}
+
   type-fest@5.4.4:
     resolution: {integrity: sha512-JnTrzGu+zPV3aXIUhnyWJj4z/wigMsdYajGLIYakqyOW1nPllzXEJee0QQbHj+CTIQtXGlAjuK0UY+2xTyjVAw==}
     engines: {node: '>=20'}
@@ -9723,11 +9727,11 @@ snapshots:
     transitivePeerDependencies:
       - react-dom
 
-  '@literal-ui/next@0.0.3(next@15.5.10(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(react-dom@18.0.0(react@18.0.0))(react@18.0.0))(react@18.0.0)':
+  '@literal-ui/next@0.0.4(next@15.5.10(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(react-dom@18.0.0(react@18.0.0))(react@18.0.0))(react@18.0.0)':
     dependencies:
       next: 15.5.10(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(react-dom@18.0.0(react@18.0.0))(react@18.0.0)
       react: 18.0.0
-      type-fest: 2.12.2
+      type-fest: 2.19.0
 
   '@literal-ui/plugins@0.0.3(tailwindcss@3.2.0(postcss@8.4.31))':
     dependencies:
@@ -16934,6 +16938,8 @@ snapshots:
   type-fest@0.7.1: {}
 
   type-fest@2.12.2: {}
+
+  type-fest@2.19.0: {}
 
   type-fest@5.4.4:
     dependencies:
