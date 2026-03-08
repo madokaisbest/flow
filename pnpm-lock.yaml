@@ -36,8 +36,8 @@ importers:
         specifier: 0.14.1
         version: 0.14.1
       husky:
-        specifier: 7.0.4
-        version: 7.0.4
+        specifier: 9.1.7
+        version: 9.1.7
       lint-staged:
         specifier: 12.3.7
         version: 12.3.7(enquirer@2.4.1)
@@ -4485,9 +4485,9 @@ packages:
     resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
     engines: {node: '>=10.17.0'}
 
-  husky@7.0.4:
-    resolution: {integrity: sha512-vbaCKN2QLtP/vD4yvs6iz6hBEo6wkSzs8HpRah1Z6aGmF2KW5PdYuAd7uX5a+OyBZHBhd+TFLqgjUgytQr4RvQ==}
-    engines: {node: '>=12'}
+  husky@9.1.7:
+    resolution: {integrity: sha512-5gs5ytaNjBrh5Ow3zrvdUUY+0VxIuWVL4i9irt6friV+BqdCfmV11CQTWMiBYWHbXhco+J1kHfTOUkePhCDvMA==}
+    engines: {node: '>=18'}
     hasBin: true
 
   hyphenate-style-name@1.1.0:
@@ -13495,7 +13495,7 @@ snapshots:
 
   human-signals@2.1.0: {}
 
-  husky@7.0.4: {}
+  husky@9.1.7: {}
 
   hyphenate-style-name@1.1.0: {}
 
