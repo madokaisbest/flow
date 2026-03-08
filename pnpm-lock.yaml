@@ -88,8 +88,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/internal
       '@github/mini-throttle':
-        specifier: 2.1.0
-        version: 2.1.0
+        specifier: 2.1.1
+        version: 2.1.1
       '@literal-ui/core':
         specifier: 0.0.13
         version: 0.0.13(react-dom@18.3.1(react@18.3.1))(react-icons@5.6.0(react@18.3.1))(react@18.3.1)
@@ -1468,8 +1468,8 @@ packages:
     peerDependencies:
       '@opentelemetry/api': ^1.9.0
 
-  '@github/mini-throttle@2.1.0':
-    resolution: {integrity: sha512-iEeR2OdVCPkdIPUszL8gJnKNu4MR8ANh7y0u/LPyaatYezgaWxUZEzhFntloqQq+HE6MZkFy+cl+xzCNuljOdw==}
+  '@github/mini-throttle@2.1.1':
+    resolution: {integrity: sha512-KtOPaB+FiKJ6jcKm9UKyaM5fPURHGf+xcp+b4Mzoi81hOc6M1sIGpMZMAVbNzfa2lW5+RPGKq888Px0j76OZ/A==}
 
   '@humanwhocodes/config-array@0.9.5':
     resolution: {integrity: sha512-ObyMyWxZiCu/yTisA7uzx81s40xR2fD5Cg/2Kq7G02ajkNubJf6BopgDTmDyc3U7sXpNKM8cYOw7s7Tyr+DnCw==}
@@ -9682,7 +9682,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@github/mini-throttle@2.1.0': {}
+  '@github/mini-throttle@2.1.1': {}
 
   '@humanwhocodes/config-array@0.9.5':
     dependencies:
