@@ -90,8 +90,8 @@ importers:
         specifier: 0.0.3
         version: 0.0.3(next@12.3.4(@babel/core@7.26.0)(react-dom@18.0.0(react@18.0.0))(react@18.0.0))(react@18.0.0)
       '@material/material-color-utilities':
-        specifier: 0.2.0
-        version: 0.2.0
+        specifier: 0.4.0
+        version: 0.4.0
       '@next/bundle-analyzer':
         specifier: 12.1.6
         version: 12.1.6
@@ -1363,8 +1363,8 @@ packages:
   '@material/material-color-utilities@0.1.2':
     resolution: {integrity: sha512-uKkkx7Xo1AZJR0eMjH902rAb0vEjDbb3tgXt0cC3SHbpDGkPNhkuDKtxnw147axOM6uKuI7vywHRQlDrjDGhCA==}
 
-  '@material/material-color-utilities@0.2.0':
-    resolution: {integrity: sha512-Wux17VAe27abfUyA+yPq/xN7+e6xkj1UFKd9g02KD0HhpM+GRqXLfytJ6nJKhFtliZouQfTcBcOg2cGrt/XbKA==}
+  '@material/material-color-utilities@0.4.0':
+    resolution: {integrity: sha512-dlq6VExJReb8dhjj3a/yTigr3ncNwoFmL5Iy2ENtbDX03EmNeOEdZ+vsaGrj7RTuO+mB7L58II4LCsl4NpM8uw==}
 
   '@mdx-js/loader@2.1.1':
     resolution: {integrity: sha512-24danl02C30QoXVQTqvoEL84jN1e2BBSYMk9A/DGYBtHWXg5kdVp+A6P4hrFOwHvkEIjRbY0N49jPOSbpOgrOQ==}
@@ -1462,48 +1462,56 @@ packages:
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   '@next/swc-linux-arm64-gnu@12.3.4':
     resolution: {integrity: sha512-kiX0vgJGMZVv+oo1QuObaYulXNvdH/IINmvdZnVzMO/jic/B8EEIGlZ8Bgvw8LCjH3zNVPO3mGrdMvnEEPEhKA==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   '@next/swc-linux-arm64-musl@12.1.5':
     resolution: {integrity: sha512-KgPjwdbhDqXI7ghNN8V/WAiLquc9Ebe8KBrNNEL0NQr+yd9CyKJ6KqjayVkmX+hbHzbyvbui/5wh/p3CZQ9xcQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   '@next/swc-linux-arm64-musl@12.3.4':
     resolution: {integrity: sha512-EETZPa1juczrKLWk5okoW2hv7D7WvonU+Cf2CgsSoxgsYbUCZ1voOpL4JZTOb6IbKMDo6ja+SbY0vzXZBUMvkQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   '@next/swc-linux-x64-gnu@12.1.5':
     resolution: {integrity: sha512-O2ErUTvCJ6DkNTSr9pbu1n3tcqykqE/ebty1rwClzIYdOgpB3T2MfEPP+K7GhUR87wmN/hlihO9ch7qpVFDGKw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   '@next/swc-linux-x64-gnu@12.3.4':
     resolution: {integrity: sha512-4csPbRbfZbuWOk3ATyWcvVFdD9/Rsdq5YHKvRuEni68OCLkfy4f+4I9OBpyK1SKJ00Cih16NJbHE+k+ljPPpag==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   '@next/swc-linux-x64-musl@12.1.5':
     resolution: {integrity: sha512-1eIlZmlO/VRjxxzUBcVosf54AFU3ltAzHi+BJA+9U/lPxCYIsT+R4uO3QksRzRjKWhVQMRjEnlXyyq5SKJm7BA==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   '@next/swc-linux-x64-musl@12.3.4':
     resolution: {integrity: sha512-YeBmI+63Ro75SUiL/QXEVXQ19T++58aI/IINOyhpsRL1LKdyfK/35iilraZEFz9bLQrwy1LYAR5lK200A9Gjbg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   '@next/swc-win32-arm64-msvc@12.1.5':
     resolution: {integrity: sha512-oromsfokbEuVb0CBLLE7R9qX3KGXucZpsojLpzUh1QJjuy1QkrPJncwr8xmWQnwgtQ6ecMWXgXPB+qtvizT9Tw==}
@@ -9677,7 +9685,7 @@ snapshots:
 
   '@material/material-color-utilities@0.1.2': {}
 
-  '@material/material-color-utilities@0.2.0': {}
+  '@material/material-color-utilities@0.4.0': {}
 
   '@mdx-js/loader@2.1.1(webpack@4.47.0)':
     dependencies:
