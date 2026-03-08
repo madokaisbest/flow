@@ -214,8 +214,8 @@ importers:
         specifier: 3.2.0
         version: 3.2.0(postcss@8.4.12)
       type-fest:
-        specifier: 2.12.2
-        version: 2.12.2
+        specifier: 5.4.4
+        version: 5.4.4
 
   apps/webdav-proxy:
     devDependencies:
@@ -317,8 +317,8 @@ importers:
         specifier: 3.2.0
         version: 3.2.0(postcss@8.4.12)
       type-fest:
-        specifier: 2.12.2
-        version: 2.12.2
+        specifier: 5.4.4
+        version: 5.4.4
 
   packages/epubjs:
     dependencies:
@@ -7525,6 +7525,10 @@ packages:
   taffydb@2.6.2:
     resolution: {integrity: sha512-y3JaeRSplks6NYQuCOj3ZFMO3j60rTwbuKCvZxsAraGYH2epusatvZ0baZYA01WsGqJBq/Dl6vOrMUJqyMj8kA==}
 
+  tagged-tag@1.0.0:
+    resolution: {integrity: sha512-yEFYrVhod+hdNyx7g5Bnkkb0G6si8HJurOoOEgC8B/O0uXLHlaey/65KRv6cuWBNhBgHKAROVpc7QyYqE5gFng==}
+    engines: {node: '>=20'}
+
   tailwindcss@3.2.0:
     resolution: {integrity: sha512-ARh/W0uH5UlWIC2nn02V0+5fyF0k6qZliyt4QYic2upOhPUE/Spu1EURNc9txJ3+4j8OEmdigqfDpw4d2tA4vA==}
     engines: {node: '>=12.13.0'}
@@ -7846,6 +7850,10 @@ packages:
   type-fest@2.12.2:
     resolution: {integrity: sha512-qt6ylCGpLjZ7AaODxbpyBZSs9fCI9SkL3Z9q2oxMBQhs/uyY+VD8jHA8ULCGmWQJlBgqvO3EJeAngOHD8zQCrQ==}
     engines: {node: '>=12.20'}
+
+  type-fest@5.4.4:
+    resolution: {integrity: sha512-JnTrzGu+zPV3aXIUhnyWJj4z/wigMsdYajGLIYakqyOW1nPllzXEJee0QQbHj+CTIQtXGlAjuK0UY+2xTyjVAw==}
+    engines: {node: '>=20'}
 
   type-is@1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
@@ -17208,6 +17216,8 @@ snapshots:
 
   taffydb@2.6.2: {}
 
+  tagged-tag@1.0.0: {}
+
   tailwindcss@3.2.0(postcss@8.4.12):
     dependencies:
       arg: 5.0.2
@@ -17561,6 +17571,10 @@ snapshots:
   type-fest@0.8.1: {}
 
   type-fest@2.12.2: {}
+
+  type-fest@5.4.4:
+    dependencies:
+      tagged-tag: 1.0.0
 
   type-is@1.6.18:
     dependencies:
