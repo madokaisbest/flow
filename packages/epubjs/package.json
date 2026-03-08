@@ -48,7 +48,7 @@
     "raw-loader": "^4.0.2",
     "terser-webpack-plugin": "^5.3.17",
     "tsd-jsdoc": "^2.5.0",
-    "webpack": "^4.43.0",
+    "webpack": "^5.105.4",
     "webpack-cli": "^3.3.11",
     "webpack-dev-middleware": "^3.7.2",
     "webpack-dev-server": "^3.11.0"
@@ -60,7 +60,7 @@
     "event-emitter": "^0.3.5",
     "jszip": "^3.7.1",
     "localforage": "^1.10.0",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "marks-pane": "^1.0.9",
     "path-webpack": "0.0.3"
   }
