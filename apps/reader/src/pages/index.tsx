@@ -140,11 +140,16 @@ const Library: React.FC = () => {
         db?.books.toArray().then((localBooks) => {
           const mergedBooks = validBooks.map((rb: any) => {
             const lb = localBooks.find((l) => l.id === rb.id)
+            if (lb) {
+              const latestUpdatedAt = Math.max(rb.updatedAt || 0, lb.updatedAt || 0)
+              const result = { ...lb, ...rb, updatedAt: latestUpdatedAt || lb.updatedAt || rb.updatedAt }
+              if (lb.status === 'local') {
+                result.status = 'local'
+              }
+              return result
+            }
             if (!rb.updatedAt) {
               rb.updatedAt = rb.createdAt || Date.now()
-            }
-            if (lb && lb.status === 'local') {
-              return { ...rb, status: 'local' }
             }
             return rb
           })
@@ -480,6 +485,10 @@ const Library: React.FC = () => {
                 loadingRef.current = true
                 setLoading(bookToOpen.id)
                 try {
+                  // Update updatedAt to keep sorting
+                  bookToOpen.updatedAt = Date.now()
+                  await db?.books.put(bookToOpen)
+
                   // 1. Sync the latest remote metadata/progress first
                   const latestRemoteBooks = await mutateRemoteBooks(undefined, { revalidate: true })
                   const remoteData = latestRemoteBooks?.find(b => b && b.name === bookToOpen.name)
@@ -489,7 +498,13 @@ const Library: React.FC = () => {
                     bookToOpen.annotations = remoteData.annotations || []
                     bookToOpen.definitions = remoteData.definitions || []
                     if (remoteData.configuration) bookToOpen.configuration = remoteData.configuration
+                    
+                    // Keep the latest updatedAt
+                    bookToOpen.updatedAt = Math.max(bookToOpen.updatedAt || 0, remoteData.updatedAt || 0)
                     await db?.books.put(bookToOpen)
+                    
+                    // Sync back to remote if local is newer (or just to be safe)
+                    db?.books.toArray().then(books => uploadData(books)).catch(() => {})
                   }
 
                   // 2. Download the epub if the status is remote
