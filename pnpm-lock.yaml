@@ -165,8 +165,8 @@ importers:
         specifier: 0.1.1
         version: 0.1.1(react@18.0.0)
       use-local-storage-state:
-        specifier: 18.1.1
-        version: 18.1.1(react-dom@18.0.0(react@18.0.0))(react@18.0.0)
+        specifier: 19.5.0
+        version: 19.5.0(react-dom@18.0.0(react@18.0.0))(react@18.0.0)
       uuid:
         specifier: 13.0.0
         version: 13.0.0
@@ -8113,9 +8113,9 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
 
-  use-local-storage-state@18.1.1:
-    resolution: {integrity: sha512-09bl6q3mkSlkEt8KeBPCmdPEWEojWYF70Qbz+7wkfQX1feaFITM9m84+h0Jr6Cnf/IvpahkFh7UbX2VNN3ioTQ==}
-    engines: {node: '>=12'}
+  use-local-storage-state@19.5.0:
+    resolution: {integrity: sha512-sUJAyFvsmqMpBhdwaRr7GTKkkoxb6PWeNVvpBDrLuwQF1PpbJRKIbOYeLLeqJI7B3wdfFlLLCBbmOdopiSTBOw==}
+    engines: {node: '>=14'}
     peerDependencies:
       react: '>=18'
       react-dom: '>=18'
@@ -17526,7 +17526,7 @@ snapshots:
       react: 18.0.0
       react-dom: 18.0.0(react@18.0.0)
 
-  use-local-storage-state@18.1.1(react-dom@18.0.0(react@18.0.0))(react@18.0.0):
+  use-local-storage-state@19.5.0(react-dom@18.0.0(react@18.0.0))(react@18.0.0):
     dependencies:
       react: 18.0.0
       react-dom: 18.0.0(react@18.0.0)
