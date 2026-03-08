@@ -121,11 +121,11 @@ importers:
         specifier: 1.11.2
         version: 1.11.2
       dexie:
-        specifier: 3.2.2
-        version: 3.2.2
+        specifier: 4.3.0
+        version: 4.3.0
       dexie-react-hooks:
         specifier: 1.1.1
-        version: 1.1.1(@types/react@18.3.28)(dexie@3.2.2)(react@18.3.1)
+        version: 1.1.1(@types/react@18.3.28)(dexie@4.3.0)(react@18.3.1)
       file-saver:
         specifier: 2.0.5
         version: 2.0.5
@@ -3816,9 +3816,8 @@ packages:
       dexie: '>=3.1.0-alpha.1 <5.0.0'
       react: '>=16'
 
-  dexie@3.2.2:
-    resolution: {integrity: sha512-q5dC3HPmir2DERlX+toCBbHQXW5MsyrFqPFcovkH9N2S/UW/H3H5AWAB6iEOExeraAu+j+zRDG+zg/D7YhH0qg==}
-    engines: {node: '>=6.0'}
+  dexie@4.3.0:
+    resolution: {integrity: sha512-5EeoQpJvMKHe6zWt/FSIIuRa3CWlZeIl6zKXt+Lz7BU6RoRRLgX9dZEynRfXrkLcldKYCBiz7xekTEylnie1Ug==}
 
   di@0.0.1:
     resolution: {integrity: sha512-uJaamHkagcZtHPqCIHZxnFrXlunQXgBOsZSUOWwFw31QJCAbyTBoHMW75YOTur5ZNx8pIeAKgf6GWIgaqqiLhA==}
@@ -12096,13 +12095,13 @@ snapshots:
     dependencies:
       dequal: 2.0.3
 
-  dexie-react-hooks@1.1.1(@types/react@18.3.28)(dexie@3.2.2)(react@18.3.1):
+  dexie-react-hooks@1.1.1(@types/react@18.3.28)(dexie@4.3.0)(react@18.3.1):
     dependencies:
       '@types/react': 18.3.28
-      dexie: 3.2.2
+      dexie: 4.3.0
       react: 18.3.1
 
-  dexie@3.2.2: {}
+  dexie@4.3.0: {}
 
   di@0.0.1: {}
 
