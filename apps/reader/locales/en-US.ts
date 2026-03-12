@@ -38,6 +38,8 @@ export default {
   'typography.font_weight': 'Font Weight',
   'typography.line_height': 'Line Height',
   'typography.zoom': 'Zoom',
+  'typography.allow_scripts':
+    'Allow Scripts (Recommended for trusted books only)',
 
   'theme.title': 'Theme',
   'theme.source_color': 'Source Color',

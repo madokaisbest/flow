@@ -38,6 +38,7 @@ export default {
   'typography.font_weight': 'フォントウェイト',
   'typography.line_height': '行の高さ',
   'typography.zoom': 'ズーム',
+  'typography.allow_scripts': 'スクリプトの実行 (信頼できる本のみ推奨)',
 
   'theme.title': 'テーマ',
   'theme.source_color': 'ソースカラー',

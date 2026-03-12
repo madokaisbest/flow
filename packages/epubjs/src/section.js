@@ -1,4 +1,5 @@
 import { DOMParser as XMLDOMSerializer } from '@xmldom/xmldom'
+import DOMPurify from 'dompurify'
 
 import EpubCFI from './epubcfi'
 import { defer } from './utils/core'
@@ -110,6 +111,22 @@ class Section {
           }
           var serializer = new Serializer()
           this.output = serializer.serializeToString(contents)
+
+          if (typeof window !== 'undefined') {
+            const config = {
+              ADD_TAGS: ['link', 'style'],
+              ADD_ATTR: ['rel', 'href', 'type'],
+              WHOLE_DOCUMENT: true,
+            }
+
+            if (this.allowScripts) {
+              config.ADD_TAGS.push('script')
+              config.ADD_ATTR.push('onclick', 'onload', 'onerror', 'src')
+            }
+
+            this.output = DOMPurify.sanitize(this.output, config)
+          }
+
           return this.output
         }.bind(this),
       )
@@ -136,12 +153,11 @@ class Section {
    * @return {object[]} A list of matches, with form {cfi, excerpt}
    */
   find(_query) {
-    var section = this
     var matches = []
     var query = _query.toLowerCase()
-    var find = function (node) {
+    var find = (node) => {
       var text = node.textContent.toLowerCase()
-      var range = section.document.createRange()
+      var range = this.document.createRange()
       var cfi
       var pos
       var last = -1
@@ -154,11 +170,11 @@ class Section {
 
         if (pos != -1) {
           // We found it! Generate a CFI
-          range = section.document.createRange()
+          range = this.document.createRange()
           range.setStart(node, pos)
           range.setEnd(node, pos + query.length)
 
-          cfi = section.cfiFromRange(range)
+          cfi = this.cfiFromRange(range)
 
           // Generate the excerpt
           if (node.textContent.length < limit) {
@@ -182,7 +198,7 @@ class Section {
       }
     }
 
-    sprint(section.document, function (node) {
+    sprint(this.document, function (node) {
       find(node)
     })
 
@@ -201,9 +217,8 @@ class Section {
     }
     let matches = []
     const excerptLimit = 150
-    const section = this
     const query = _query.toLowerCase()
-    const search = function (nodeList) {
+    const search = (nodeList) => {
       const textWithCase = nodeList.reduce((acc, current) => {
         return acc + current.textContent
       }, '')
@@ -226,7 +241,7 @@ class Section {
 
           let startNode = nodeList[startNodeIndex],
             endNode = nodeList[endNodeIndex]
-          let range = section.document.createRange()
+          let range = this.document.createRange()
           range.setStart(startNode, pos)
           let beforeEndLengthCount = nodeList
             .slice(0, endNodeIndex)
@@ -239,7 +254,7 @@ class Section {
               ? endPos
               : endPos - beforeEndLengthCount,
           )
-          cfi = section.cfiFromRange(range)
+          cfi = this.cfiFromRange(range)
 
           let excerpt = nodeList
             .slice(0, endNodeIndex + 1)
@@ -262,7 +277,7 @@ class Section {
     }
 
     const treeWalker = document.createTreeWalker(
-      section.document,
+      this.document,
       NodeFilter.SHOW_TEXT,
       null,
       false,

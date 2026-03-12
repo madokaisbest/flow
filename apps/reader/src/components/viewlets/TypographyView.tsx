@@ -12,7 +12,7 @@ import {
 } from '@flow/reader/state'
 import { keys } from '@flow/reader/utils'
 
-import { Select, TextField, TextFieldProps } from '../Form'
+import { Checkbox, Select, TextField, TextFieldProps } from '../Form'
 import { PaneViewProps, PaneView, Pane } from '../base'
 
 // Define an interface for the Font object
@@ -30,9 +30,18 @@ export const TypographyView: React.FC<PaneViewProps> = (props) => {
 
   const [localFonts, setLocalFonts] = useState<string[]>()
 
-  const { fontFamily, fontSize, fontWeight, lineHeight, zoom, spread } =
+  const {
+    fontFamily,
+    fontSize,
+    fontWeight,
+    lineHeight,
+    zoom,
+    spread,
+    allowScripts,
+  } =
     scope === TypographyScope.Book
-      ? focusedBookTab?.book.configuration?.typography ?? defaultSettings
+      ? ((focusedBookTab?.book.configuration?.typography as any) ??
+        defaultSettings)
       : settings
 
   const setTypography = useCallback(
@@ -78,7 +87,7 @@ export const TypographyView: React.FC<PaneViewProps> = (props) => {
 
   return (
     <PaneView {...props}>
-      <div className="typescale-body-medium flex gap-2 px-5 pb-2 !text-[13px]">
+      <div className="flex gap-2 px-5 pb-2 !text-[13px] typescale-body-medium">
         {keys(TypographyScope)
           .filter((k) => isNaN(Number(k)))
           .map((scopeName) => (
@@ -97,7 +106,7 @@ export const TypographyView: React.FC<PaneViewProps> = (props) => {
       </div>
       <Pane
         headline={t('title')}
-        className="space-y-3 px-5 pt-2 pb-4"
+        className="space-y-3 px-5 pb-4 pt-2"
         key={`${scope}${focusedBookTab?.id}`}
       >
         <Select
@@ -169,6 +178,21 @@ export const TypographyView: React.FC<PaneViewProps> = (props) => {
           defaultValue={zoom}
           onChange={(v) => {
             setTypography('zoom', v || undefined)
+          }}
+        />
+        <Checkbox
+          name={t('allow_scripts')}
+          checked={!!allowScripts}
+          onChange={(e) => {
+            setTypography('allowScripts', e.target.checked)
+            // Reload to apply changes to rendition
+            if (
+              confirm(
+                'Changing script settings requires reloading the book. Reload now?',
+              )
+            ) {
+              window.location.reload()
+            }
           }}
         />
       </Pane>

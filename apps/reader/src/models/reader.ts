@@ -363,13 +363,19 @@ export class BookTab extends BaseTab {
         this.sections = ref(sections)
       })
     })
+    const allowScripts =
+      this.book.configuration?.typography?.allowScripts ?? false
     this.rendition = ref(
       this.epub.renderTo(el, {
         width: '100%',
         height: '100%',
-        allowScriptedContent: true,
+        allowScriptedContent: allowScripts,
       }),
     )
+
+    this.epub.spine.each((section: any) => {
+      section.allowScripts = allowScripts
+    })
     this.rendition.display(
       this.location?.start.cfi ?? this.book.cfi ?? undefined,
     )

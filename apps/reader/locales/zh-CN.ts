@@ -38,6 +38,7 @@ export default {
   'typography.font_weight': '字重',
   'typography.line_height': '行高',
   'typography.zoom': '缩放',
+  'typography.allow_scripts': '运行脚本 (建议仅对信任的书籍开启)',
 
   'theme.title': '颜色主题',
   'theme.source_color': '源色',

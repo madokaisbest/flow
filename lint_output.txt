@@ -1,0 +1,33 @@
+
+> @flow/epubjs@0.3.93 lint /opt/stacks/flow/packages/epubjs
+> eslint -c .eslintrc.js src; exit 0
+
+
+/opt/stacks/flow/packages/epubjs/src/epubcfi.js
+  342:25  error  'rangeBEndSteps' is already defined                                        no-redeclare
+  896:16  error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  930:9   error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+
+/opt/stacks/flow/packages/epubjs/src/managers/helpers/snap.js
+  99:52  error  'DocumentTouch' is not defined  no-undef
+
+/opt/stacks/flow/packages/epubjs/src/managers/helpers/stage.js
+  278:17  error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+
+/opt/stacks/flow/packages/epubjs/src/managers/views/iframe.js
+  379:24  error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  427:27  error  'MSApp' is not defined                                                     no-undef
+  428:13  error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+  429:9   error  'MSApp' is not defined                                                     no-undef
+
+/opt/stacks/flow/packages/epubjs/src/themes.js
+   74:18  error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  162:16  error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  245:21  error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+
+/opt/stacks/flow/packages/epubjs/src/utils/mime.js
+  149:15  error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  151:25  error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+
+✖ 14 problems (14 errors, 0 warnings)
+

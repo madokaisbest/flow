@@ -161,6 +161,9 @@ importers:
       dexie-react-hooks:
         specifier: 4.2.0
         version: 4.2.0(@types/react@18.3.28)(dexie@4.3.0)(react@18.3.1)
+      dompurify:
+        specifier: 3.3.3
+        version: 3.3.3
       file-saver:
         specifier: 2.0.5
         version: 2.0.5
@@ -231,6 +234,9 @@ importers:
       '@tailwindcss/line-clamp':
         specifier: 0.4.2
         version: 0.4.2(tailwindcss@3.4.19)
+      '@types/dompurify':
+        specifier: 3.2.0
+        version: 3.2.0
       '@types/file-saver':
         specifier: 2.0.5
         version: 2.0.5
@@ -395,6 +401,9 @@ importers:
       core-js:
         specifier: ^3.48.0
         version: 3.48.0
+      dompurify:
+        specifier: 3.3.3
+        version: 3.3.3
       event-emitter:
         specifier: ^0.3.5
         version: 0.3.5
@@ -438,6 +447,9 @@ importers:
       '@babel/runtime':
         specifier: ^7.28.6
         version: 7.28.6
+      '@types/dompurify':
+        specifier: 3.2.0
+        version: 3.2.0
       '@types/react':
         specifier: ^18.3.28
         version: 18.3.28
@@ -2656,6 +2668,10 @@ packages:
   '@types/debug@4.1.12':
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
 
+  '@types/dompurify@3.2.0':
+    resolution: {integrity: sha512-Fgg31wv9QbLDA0SpTOXO3MaxySc4DKGLi8sna4/Utjo4r3ZRPdCt4UQee8BWr+Q5z21yifghREPJGYaEOEIACg==}
+    deprecated: This is a stub types definition. dompurify provides its own type definitions, so you do not need this installed.
+
   '@types/eslint-scope@3.7.7':
     resolution: {integrity: sha512-MzMFlSLBqNF2gcHWO0G1vP/YQyfvrxZ0bF+u7mzUdZ1/xK4A4sru+nraZz5i3iEIk1l1uyicaDVTB4QbbEkAYg==}
 
@@ -3871,6 +3887,9 @@ packages:
 
   dom-serialize@2.2.1:
     resolution: {integrity: sha512-Yra4DbvoW7/Z6LBN560ZwXMjoNOSAN2wRsKFGc4iBeso+mpIA6qj1vfdf9HpMaKAqG6wXTy+1SYEzmNpKXOSsQ==}
+
+  dompurify@3.3.3:
+    resolution: {integrity: sha512-Oj6pzI2+RqBfFG+qOaOLbFXLQ90ARpcGG6UePL82bJLtdsa6CYJD7nmiU8MW9nQNOtCHV3lZ/Bzq1X0QYbBZCA==}
 
   dotenv@16.6.1:
     resolution: {integrity: sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow==}
@@ -10557,6 +10576,10 @@ snapshots:
     dependencies:
       '@types/ms': 2.1.0
 
+  '@types/dompurify@3.2.0':
+    dependencies:
+      dompurify: 3.3.3
+
   '@types/eslint-scope@3.7.7':
     dependencies:
       '@types/eslint': 9.6.1
@@ -11870,6 +11893,10 @@ snapshots:
       ent: 2.2.2
       extend: 3.0.2
       void-elements: 2.0.1
+
+  dompurify@3.3.3:
+    optionalDependencies:
+      '@types/trusted-types': 2.0.7
 
   dotenv@16.6.1: {}
 
