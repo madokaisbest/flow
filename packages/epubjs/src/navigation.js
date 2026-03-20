@@ -208,7 +208,21 @@ class Navigation {
     if (!id) {
       id = src
     }
-    let text = content.textContent || ''
+    let text =
+      content.textContent ||
+      content.getAttribute('title') ||
+      content.innerText ||
+      ''
+    text = text.trim().replace(/\s\s+/g, ' ')
+
+    if (!text && src) {
+      let filename = src.split('/').pop()
+      if (filename.includes('.')) {
+        text = filename.substring(0, filename.lastIndexOf('.'))
+      } else {
+        text = filename
+      }
+    }
 
     let subitems = []
     let nested = filterChildren(item, 'ol', true)
@@ -269,7 +283,21 @@ class Navigation {
       content.getAttributeNS('http://www.idpf.org/2007/ops', 'type') ||
       undefined
     let href = content.getAttribute('href') || ''
-    let text = content.textContent || ''
+    let text =
+      content.textContent ||
+      content.getAttribute('title') ||
+      content.innerText ||
+      ''
+    text = text.trim().replace(/\s\s+/g, ' ')
+
+    if (!text && href) {
+      let filename = href.split('/').pop()
+      if (filename.includes('.')) {
+        text = filename.substring(0, filename.lastIndexOf('.'))
+      } else {
+        text = filename
+      }
+    }
 
     return {
       href: href,
@@ -327,10 +355,54 @@ class Navigation {
   ncxItem(item) {
     var id = item.getAttribute('id') || false,
       content = qs(item, 'content'),
-      src = (content && content.getAttribute('src')) || '',
-      navLabel = qs(item, 'navLabel'),
-      text = (navLabel && navLabel.textContent) || '',
-      subitems = [],
+      src = (content && content.getAttribute('src')) || ''
+
+    // Robustly find navLabel
+    var navLabel = qs(item, 'navLabel')
+    if (!navLabel) {
+      // Namespace fallback for navLabel
+      for (let i = 0; i < item.childNodes.length; i++) {
+        let node = item.childNodes[i]
+        if (
+          node.nodeType === 1 &&
+          node.nodeName.split(':').pop() === 'navLabel'
+        ) {
+          navLabel = node
+          break
+        }
+      }
+    }
+
+    // Robustly find text
+    var textNode = navLabel ? qs(navLabel, 'text') : null
+    if (!textNode && navLabel) {
+      for (let i = 0; i < navLabel.childNodes.length; i++) {
+        let node = navLabel.childNodes[i]
+        if (node.nodeType === 1 && node.nodeName.split(':').pop() === 'text') {
+          textNode = node
+          break
+        }
+      }
+    }
+
+    var text =
+      (textNode && textNode.textContent) ||
+      (navLabel && navLabel.textContent) ||
+      item.getAttribute('label') ||
+      ''
+
+    text = text.trim().replace(/\s\s+/g, ' ')
+
+    if (!text && src) {
+      let filename = src.split('/').pop()
+      if (filename.includes('.')) {
+        text = filename.substring(0, filename.lastIndexOf('.'))
+      } else {
+        text = filename
+      }
+    }
+
+    var subitems = [],
       parentNode = item.parentNode,
       parent
 

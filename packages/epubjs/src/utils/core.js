@@ -24,8 +24,8 @@ const _URL =
   typeof URL != 'undefined'
     ? URL
     : typeof window != 'undefined'
-    ? window.URL || window.webkitURL || window.mozURL
-    : undefined
+      ? window.URL || window.webkitURL || window.mozURL
+      : undefined
 
 /**
  * Generates a UUID
@@ -38,7 +38,7 @@ export function uuid() {
   var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
     /[xy]/g,
     function (c) {
-      var r = (d + Math.random() * 16) % 16 | 0
+      var r = ((d + Math.random() * 16) % 16) | 0
       d = Math.floor(d / 16)
       return (c == 'x' ? r : (r & 0x7) | 0x8).toString(16)
     },
@@ -518,8 +518,27 @@ export function type(obj) {
  * @memberof Core
  */
 export function parse(markup, mime, forceXMLDom) {
-  var doc
-  var Parser
+  let doc
+  let Parser
+  let parser
+  let cleanedMarkup = markup
+
+  // Remove byte order mark before parsing
+  // https://www.w3.org/International/questions/qa-byte-order-mark
+  if (cleanedMarkup.charCodeAt(0) === 0xfeff) {
+    cleanedMarkup = cleanedMarkup.slice(1)
+  }
+
+  // Fix unescaped ampersands in XML/HTML markup
+  if (
+    typeof cleanedMarkup === 'string' &&
+    (mime === 'text/xml' || mime === 'application/xhtml+xml')
+  ) {
+    cleanedMarkup = cleanedMarkup.replace(
+      /&(?!(?:[a-z0-9]+|#[0-9]+|#x[a-f0-9]+);)/gi,
+      '&amp;',
+    )
+  }
 
   if (typeof DOMParser === 'undefined' || forceXMLDom) {
     Parser = XMLDOMParser
@@ -527,13 +546,15 @@ export function parse(markup, mime, forceXMLDom) {
     Parser = DOMParser
   }
 
-  // Remove byte order mark before parsing
-  // https://www.w3.org/International/questions/qa-byte-order-mark
-  if (markup.charCodeAt(0) === 0xfeff) {
-    markup = markup.slice(1)
-  }
+  parser = new Parser()
 
-  doc = new Parser().parseFromString(markup, mime)
+  try {
+    doc = parser.parseFromString(cleanedMarkup, mime)
+  } catch (e) {
+    // If parsing fails, return null or throw an error, depending on desired behavior.
+    // For now, returning null as per the original instruction's implied behavior.
+    return null
+  }
 
   return doc
 }
