@@ -13,7 +13,9 @@ interface DropZoneProps {
   onDrop?: (e: DragEvent<HTMLDivElement>, position?: Position) => void
   split?: boolean
 }
-export const DropZone: React.FC<React.PropsWithChildren<DropZoneProps>> = (props) => {
+export const DropZone: React.FC<React.PropsWithChildren<DropZoneProps>> = (
+  props,
+) => {
   return (
     <DndProvider>
       <DropZoneInner {...props} />
@@ -30,7 +32,8 @@ function accept(e?: DragEvent) {
   return !!dt?.types.every((t) => ['text/plain', 'Files'].includes(t))
 }
 
-const DropZoneInner: React.FC<React.PropsWithChildren<DropZoneProps>> = ({ children,
+const DropZoneInner: React.FC<React.PropsWithChildren<DropZoneProps>> = ({
+  children,
   className,
   onDrop,
   split = false,
@@ -91,11 +94,11 @@ const DropZoneInner: React.FC<React.PropsWithChildren<DropZoneProps>> = ({ child
       {dragover && (
         <div
           className={clsx(
-            'bg-outline/20 absolute z-10 transition',
-            position === 'left' && 'inset-y-0 right-1/2 left-0',
-            position === 'right' && 'inset-y-0 right-0 left-1/2',
-            position === 'top' && 'inset-x-0 top-0 bottom-1/2',
-            position === 'bottom' && 'inset-x-0 top-1/2 bottom-0',
+            'absolute z-10 bg-outline/20 transition',
+            position === 'left' && 'inset-y-0 left-0 right-1/2',
+            position === 'right' && 'inset-y-0 left-1/2 right-0',
+            position === 'top' && 'inset-x-0 bottom-1/2 top-0',
+            position === 'bottom' && 'inset-x-0 bottom-0 top-1/2',
             position === 'universe' && 'inset-0',
           )}
         ></div>
@@ -125,7 +128,7 @@ const DndContext = createContext<{
   dragover: boolean
   setDragEvent: (e?: DragEvent) => void
 }>({ dragover: false, setDragEvent: () => {} })
-const DndProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
+const DndProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [dragover, setDragover] = useState(false)
 
   const setDragEvent = useCallback((e?: DragEvent) => {
