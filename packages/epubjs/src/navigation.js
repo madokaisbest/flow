@@ -296,12 +296,22 @@ class Navigation {
 
     for (i = 0; i < length; ++i) {
       item = this.ncxItem(navPoints[i])
-      toc[item.id] = item
-      if (!item.parent) {
-        list.push(item)
-      } else {
-        parent = toc[item.parent]
-        parent.subitems.push(item)
+      if (item) {
+        if (item.id) {
+          toc[item.id] = item
+        }
+
+        if (!item.parent) {
+          list.push(item)
+        } else {
+          parent = toc[item.parent]
+          if (parent) {
+            parent.subitems.push(item)
+          } else {
+            // Fallback for missing parent
+            list.push(item)
+          }
+        }
       }
     }
 
@@ -317,9 +327,9 @@ class Navigation {
   ncxItem(item) {
     var id = item.getAttribute('id') || false,
       content = qs(item, 'content'),
-      src = content.getAttribute('src'),
+      src = (content && content.getAttribute('src')) || '',
       navLabel = qs(item, 'navLabel'),
-      text = navLabel.textContent ? navLabel.textContent : '',
+      text = (navLabel && navLabel.textContent) || '',
       subitems = [],
       parentNode = item.parentNode,
       parent

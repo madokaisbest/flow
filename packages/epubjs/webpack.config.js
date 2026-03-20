@@ -42,12 +42,26 @@ module.exports = {
     'jszip/dist/jszip': 'JSZip',
     xmldom: 'xmldom',
   },
-  plugins: [],
   resolve: {
     alias: {
       path: 'path-webpack',
     },
+    fallback: {
+      path: require.resolve('path-webpack'),
+      fs: false,
+      util: require.resolve('util/'),
+      assert: require.resolve('assert/'),
+      stream: false,
+      buffer: require.resolve('buffer/'),
+      process: require.resolve('process/browser'),
+    },
   },
+  plugins: [
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+      Buffer: ['buffer', 'Buffer'],
+    }),
+  ],
   devServer: {
     host: hostname,
     port: port,
