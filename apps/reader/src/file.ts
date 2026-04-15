@@ -89,14 +89,30 @@ async function toDataUrl(url: string) {
   return readBlob((r) => r.readAsDataURL(buffer))
 }
 
+function getSafeBookUrl(rawUrl: string) {
+  try {
+    const parsed = new URL(rawUrl, window.location.origin)
+    const isHttp = parsed.protocol === 'http:' || parsed.protocol === 'https:'
+    const isAllowedOrigin = parsed.origin === window.location.origin
+
+    if (!isHttp || !isAllowedOrigin) return null
+    return parsed.toString()
+  } catch {
+    return null
+  }
+}
+
 export async function fetchBook(url: string) {
-  const filename = decodeURIComponent(/\/([^/]*\.epub)$/i.exec(url)?.[1] ?? '')
+  const safeUrl = getSafeBookUrl(url)
+  if (!safeUrl) return null
+
+  const filename = decodeURIComponent(/\/([^/]*\.epub)$/i.exec(safeUrl)?.[1] ?? '')
   const books = await db?.books.toArray()
   const book = books?.find((b) => b.name === filename)
 
   return (
     book ??
-    fetch(url)
+    fetch(safeUrl)
       .then((res) => res.blob())
       .then((blob) => addBook(new File([blob], filename)))
   )
