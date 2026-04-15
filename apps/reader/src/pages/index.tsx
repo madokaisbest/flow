@@ -51,7 +51,7 @@ export default function Index() {
     Promise.all(
       src.map((s) =>
         fetchBook(s).then((b) => {
-          reader.addTab(b)
+          if (b) reader.addTab(b)
         }),
       ),
     ).finally(() => setLoading(false))
