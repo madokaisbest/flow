@@ -162,8 +162,8 @@ importers:
         specifier: 4.2.0
         version: 4.2.0(@types/react@18.3.28)(dexie@4.3.0)(react@18.3.1)
       dompurify:
-        specifier: 3.3.3
-        version: 3.3.3
+        specifier: 3.4.0
+        version: 3.4.0
       file-saver:
         specifier: 2.0.5
         version: 2.0.5
@@ -402,8 +402,8 @@ importers:
         specifier: ^3.48.0
         version: 3.48.0
       dompurify:
-        specifier: 3.3.3
-        version: 3.3.3
+        specifier: 3.4.0
+        version: 3.4.0
       event-emitter:
         specifier: ^0.3.5
         version: 0.3.5
@@ -3909,8 +3909,8 @@ packages:
   dom-serialize@2.2.1:
     resolution: {integrity: sha512-Yra4DbvoW7/Z6LBN560ZwXMjoNOSAN2wRsKFGc4iBeso+mpIA6qj1vfdf9HpMaKAqG6wXTy+1SYEzmNpKXOSsQ==}
 
-  dompurify@3.3.3:
-    resolution: {integrity: sha512-Oj6pzI2+RqBfFG+qOaOLbFXLQ90ARpcGG6UePL82bJLtdsa6CYJD7nmiU8MW9nQNOtCHV3lZ/Bzq1X0QYbBZCA==}
+  dompurify@3.4.0:
+    resolution: {integrity: sha512-nolgK9JcaUXMSmW+j1yaSvaEaoXYHwWyGJlkoCTghc97KgGDDSnpoU/PlEnw63Ah+TGKFOyY+X5LnxaWbCSfXg==}
 
   dotenv@16.6.1:
     resolution: {integrity: sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow==}
@@ -10630,7 +10630,7 @@ snapshots:
 
   '@types/dompurify@3.2.0':
     dependencies:
-      dompurify: 3.3.3
+      dompurify: 3.4.0
 
   '@types/eslint-scope@3.7.7':
     dependencies:
@@ -11961,7 +11961,7 @@ snapshots:
       extend: 3.0.2
       void-elements: 2.0.1
 
-  dompurify@3.3.3:
+  dompurify@3.4.0:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
