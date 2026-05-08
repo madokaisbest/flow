@@ -39,7 +39,7 @@
     "autoprefixer": "10.4.4",
     "m3-tokens": "0.0.3",
     "next-transpile-modules": "9.0.0",
-    "postcss": "8.5.10",
+    "postcss": "8.5.11",
     "tailwindcss": "^3.4.17",
     "type-fest": "5.4.4"
   },
