@@ -96,7 +96,16 @@ function getSafeBookUrl(rawUrl: string) {
     const isAllowedOrigin = parsed.origin === window.location.origin
 
     if (!isHttp || !isAllowedOrigin) return null
-    return parsed.toString()
+
+    const normalizedPath = decodeURIComponent(parsed.pathname)
+    const hasTraversal = normalizedPath.split('/').some((segment) => segment === '..')
+    const filename = normalizedPath.split('/').pop() ?? ''
+    const isEpub = /\.epub$/i.test(filename)
+    const hasSafeFilename = /^[A-Za-z0-9._-]+\.epub$/i.test(filename)
+
+    if (hasTraversal || !isEpub || !hasSafeFilename) return null
+
+    return `${parsed.origin}${parsed.pathname}${parsed.search}${parsed.hash}`
   } catch {
     return null
   }
