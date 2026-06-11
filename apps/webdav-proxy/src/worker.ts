@@ -32,7 +32,10 @@ export default {
                 if (exactOrigin === allowed) return true;
                 // 允许配置像 https://*.pages.dev 这样的通配符
                 if (allowed.includes("*")) {
-                    const regex = new RegExp("^" + allowed.replace(/\./g, "\\.").replace(/\*/g, ".*") + "$");
+                    const escapedAllowed = allowed
+                        .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+                        .replace(/\\\*/g, ".*");
+                    const regex = new RegExp("^" + escapedAllowed + "$");
                     return regex.test(exactOrigin);
                 }
                 return false;
