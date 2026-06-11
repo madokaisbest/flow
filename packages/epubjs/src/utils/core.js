@@ -29,21 +29,38 @@ const _URL =
 
 /**
  * Generates a UUID
- * based on: http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
  * @returns {string} uuid
  * @memberof Core
  */
 export function uuid() {
-  var d = new Date().getTime()
-  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-    /[xy]/g,
-    function (c) {
-      var r = ((d + Math.random() * 16) % 16) | 0
-      d = Math.floor(d / 16)
-      return (c == 'x' ? r : (r & 0x7) | 0x8).toString(16)
-    },
-  )
-  return uuid
+  if (typeof globalThis !== 'undefined' && globalThis.crypto) {
+    if (typeof globalThis.crypto.randomUUID === 'function') {
+      return globalThis.crypto.randomUUID()
+    }
+
+    if (typeof globalThis.crypto.getRandomValues === 'function') {
+      var bytes = new Uint8Array(16)
+      globalThis.crypto.getRandomValues(bytes)
+
+      // Per RFC 4122 section 4.4 (UUID v4)
+      bytes[6] = (bytes[6] & 0x0f) | 0x40
+      bytes[8] = (bytes[8] & 0x3f) | 0x80
+
+      var hex = Array.from(bytes, function (b) {
+        return b.toString(16).padStart(2, '0')
+      }).join('')
+
+      return [
+        hex.slice(0, 8),
+        hex.slice(8, 12),
+        hex.slice(12, 16),
+        hex.slice(16, 20),
+        hex.slice(20, 32),
+      ].join('-')
+    }
+  }
+
+  throw new Error('Secure random UUID generation is not available in this environment')
 }
 
 /**
