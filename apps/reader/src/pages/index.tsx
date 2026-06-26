@@ -241,7 +241,13 @@ const Library: React.FC = () => {
                   setLoading(undefined)
                 }
               } else {
-                if (book.status === 'remote') {
+                if (book.size !== remoteFile.size) {
+                  book.status = 'remote'
+                  book.size = remoteFile.size || 0
+                  book.remotePath = `/books/${remoteFile.name}`
+                  await db?.books.put(book)
+                  await db?.files.delete(book.id)
+                } else if (book.status === 'remote') {
                   book.status = 'local'
                   await db?.books.put(book)
                 }
