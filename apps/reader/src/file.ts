@@ -32,6 +32,12 @@ export async function handleFiles(files: Iterable<File>) {
 
     if (!book) {
       book = await addBook(file)
+    } else {
+      book.size = file.size
+      book.status = 'local'
+      book.updatedAt = Date.now()
+      await db?.books.put(book)
+      await addFile(book.id, file)
     }
 
     newBooks.push(book)
@@ -60,7 +66,7 @@ export async function addBook(file: File) {
 }
 
 export async function addFile(id: string, file: File, epub?: Book) {
-  db?.files.add({ id, file })
+  await db?.files.put({ id, file })
 
   if (!epub) {
     epub = await fileToEpub(file)
@@ -98,7 +104,9 @@ function getSafeBookUrl(rawUrl: string) {
     if (!isHttp || !isAllowedOrigin) return null
 
     const normalizedPath = decodeURIComponent(parsed.pathname)
-    const hasTraversal = normalizedPath.split('/').some((segment) => segment === '..')
+    const hasTraversal = normalizedPath
+      .split('/')
+      .some((segment) => segment === '..')
     const filename = normalizedPath.split('/').pop() ?? ''
     const isEpub = /\.epub$/i.test(filename)
     const hasSafeFilename = /^[A-Za-z0-9._-]+\.epub$/i.test(filename)
@@ -115,7 +123,9 @@ export async function fetchBook(url: string) {
   const safeUrl = getSafeBookUrl(url)
   if (!safeUrl) return null
 
-  const filename = decodeURIComponent(/\/([^/]*\.epub)$/i.exec(safeUrl)?.[1] ?? '')
+  const filename = decodeURIComponent(
+    /\/([^/]*\.epub)$/i.exec(safeUrl)?.[1] ?? '',
+  )
   const books = await db?.books.toArray()
   const book = books?.find((b) => b.name === filename)
 
