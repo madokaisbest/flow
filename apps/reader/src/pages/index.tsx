@@ -145,15 +145,18 @@ const Library: React.FC = () => {
             const mergedBooks = validBooks.map((rb: any) => {
               const lb = localBooks.find((l) => l.id === rb.id)
               if (lb) {
-                const latestUpdatedAt = Math.max(
-                  rb.updatedAt || 0,
-                  lb.updatedAt || 0,
-                )
-                const result = {
-                  ...lb,
-                  ...rb,
-                  updatedAt: latestUpdatedAt || lb.updatedAt || rb.updatedAt,
-                }
+                const localIsNewer = (lb.updatedAt || 0) >= (rb.updatedAt || 0)
+                const result = localIsNewer
+                  ? {
+                      ...rb,
+                      ...lb,
+                      updatedAt: lb.updatedAt || rb.updatedAt,
+                    }
+                  : {
+                      ...lb,
+                      ...rb,
+                      updatedAt: rb.updatedAt || lb.updatedAt,
+                    }
                 if (lb.status === 'local') {
                   result.status = 'local'
                 }
@@ -524,6 +527,7 @@ const Library: React.FC = () => {
                 loadingRef.current = true
                 setLoading(bookToOpen.id)
                 try {
+                  const originalUpdatedAt = bookToOpen.updatedAt || 0
                   // Update updatedAt to keep sorting
                   bookToOpen.updatedAt = Date.now()
                   await db?.books.put(bookToOpen)
@@ -535,7 +539,11 @@ const Library: React.FC = () => {
                   const remoteData = latestRemoteBooks?.find(
                     (b) => b && b.name === bookToOpen.name,
                   )
-                  if (remoteData) {
+
+                  if (
+                    remoteData &&
+                    (remoteData.updatedAt || 0) > originalUpdatedAt
+                  ) {
                     bookToOpen.cfi = remoteData.cfi
                     bookToOpen.percentage = remoteData.percentage
                     bookToOpen.annotations = remoteData.annotations || []
@@ -543,19 +551,18 @@ const Library: React.FC = () => {
                     if (remoteData.configuration)
                       bookToOpen.configuration = remoteData.configuration
 
-                    // Keep the latest updatedAt
                     bookToOpen.updatedAt = Math.max(
                       bookToOpen.updatedAt || 0,
                       remoteData.updatedAt || 0,
                     )
                     await db?.books.put(bookToOpen)
-
-                    // Sync back to remote if local is newer (or just to be safe)
-                    db?.books
-                      .toArray()
-                      .then((books) => uploadData(books))
-                      .catch(() => {})
                   }
+
+                  // Sync back to remote if local is newer (or just to be safe)
+                  db?.books
+                    .toArray()
+                    .then((books) => uploadData(books))
+                    .catch(() => {})
 
                   // 2. Download the epub if the status is remote
                   if (bookToOpen.status === 'remote') {
