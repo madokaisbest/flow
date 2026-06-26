@@ -370,7 +370,7 @@ const Library: React.FC = () => {
                       const remoteFile = remoteFiles?.find(
                         (f) => f.name === book.name,
                       )
-                      if (remoteFile) continue
+                      if (remoteFile && book.size === remoteFile.size) continue
 
                       const file = await db?.files.get(book.id)
                       if (!file) continue
