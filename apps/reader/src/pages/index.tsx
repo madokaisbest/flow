@@ -422,7 +422,16 @@ const Library: React.FC = () => {
                     toggleSelect()
 
                     for (const book of selectedBooks) {
-                      if (book.status !== 'remote') continue
+                      const remoteFile = remoteFiles?.find(
+                        (f) => f.name === book.name,
+                      )
+                      if (!remoteFile) continue
+
+                      if (
+                        book.status === 'local' &&
+                        book.size === remoteFile.size
+                      )
+                        continue
 
                       setLoading(book.id)
                       try {
@@ -435,6 +444,7 @@ const Library: React.FC = () => {
                           new File([contents as ArrayBuffer], book.name),
                         )
                         book.status = 'local'
+                        book.size = remoteFile.size
                         await db?.books.put(book)
                       } catch (err) {
                         console.error('Download failed:', err)
