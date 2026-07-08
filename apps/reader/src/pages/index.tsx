@@ -420,18 +420,13 @@ const Library: React.FC = () => {
                 <Button
                   onClick={async () => {
                     toggleSelect()
+                    const freshRemoteFiles = await mutateRemoteFiles()
 
                     for (const book of selectedBooks) {
-                      const remoteFile = remoteFiles?.find(
+                      const remoteFile = freshRemoteFiles?.find(
                         (f) => f.name === book.name,
                       )
                       if (!remoteFile) continue
-
-                      if (
-                        book.status === 'local' &&
-                        book.size === remoteFile.size
-                      )
-                        continue
 
                       setLoading(book.id)
                       try {
