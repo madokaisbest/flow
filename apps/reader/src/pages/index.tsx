@@ -430,6 +430,13 @@ const Library: React.FC = () => {
 
                       setLoading(book.id)
                       try {
+                        if (book.status === 'local') {
+                          await db?.files.delete(book.id)
+                          await db?.covers.delete(book.id)
+                          book.status = 'remote'
+                          await db?.books.put(book)
+                        }
+
                         const contents = await proxyRequest('getFileContents', {
                           path: `/books/${book.name}`,
                           format: 'binary',
