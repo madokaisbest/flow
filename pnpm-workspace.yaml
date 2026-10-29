@@ -1,6 +1,7 @@
 packages:
   - 'apps/*'
   - 'packages/*'
+minimumReleaseAge: 0
 allowBuilds:
   '@sentry/cli': true
   core-js: true
