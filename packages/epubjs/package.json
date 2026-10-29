@@ -27,7 +27,7 @@
   "license": "BSD-2-Clause",
   "devDependencies": {
     "@babel/cli": "^7.15.7",
-    "@babel/core": "^7.29.6",
+    "@babel/core": "^7.29.7",
     "@babel/plugin-proposal-export-default-from": "^7.14.5",
     "@babel/plugin-proposal-export-namespace-from": "^7.14.5",
     "@babel/preset-env": "^7.15.8",
@@ -58,7 +58,7 @@
     "webpack": "^5.105.4",
     "webpack-cli": "^6.0.1",
     "webpack-dev-middleware": "^5.3.4",
-    "webpack-dev-server": "^5.2.5"
+    "webpack-dev-server": "^6.0.0"
   },
   "dependencies": {
     "@types/localforage": "0.0.34",
